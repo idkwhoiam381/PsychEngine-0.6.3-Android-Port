@@ -1,5 +1,15 @@
 package;
 
+#if mobile
+class DiscordClient
+{
+	public function new()
+	{
+	    //Idk
+	}
+}
+#else
+
 import Sys.sleep;
 import discord_rpc.DiscordRpc;
 
@@ -100,3 +110,4 @@ class DiscordClient
 	}
 	#end
 }
+#end

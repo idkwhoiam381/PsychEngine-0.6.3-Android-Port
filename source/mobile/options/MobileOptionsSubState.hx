@@ -32,7 +32,6 @@ import openfl.Lib;
 import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
-import SUtil;
 import mobile.options.MobileOptionsSubState;
 
 using StringTools;
