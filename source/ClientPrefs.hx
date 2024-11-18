@@ -21,6 +21,7 @@ class ClientPrefs {
     public static var extraKeyReturn3:String = 'Q';
     public static var extraKeyReturn4:String = 'E';
 	public static var wideScreen:Bool = false;
+	public static var Modpack:Bool = false;
 	public static var middleScroll:Bool = false;
 	public static var opponentStrums:Bool = true;
 	public static var showFPS:Bool = true;
@@ -121,6 +122,7 @@ class ClientPrefs {
         FlxG.save.data.extraKeyReturn3 = extraKeyReturn3;
         FlxG.save.data.extraKeyReturn4 = extraKeyReturn4;
 		FlxG.save.data.wideScreen = wideScreen;
+		FlxG.save.data.Modpack = Modpack;
 		FlxG.save.data.middleScroll = middleScroll;
 		FlxG.save.data.opponentStrums = opponentStrums;
 		FlxG.save.data.showFPS = showFPS;
@@ -195,6 +197,8 @@ class ClientPrefs {
         	extraKeyReturn4 = FlxG.save.data.extraKeyReturn4;
 		if(FlxG.save.data.wideScreen != null)
 			wideScreen = FlxG.save.data.wideScreen;
+		if(FlxG.save.data.Modpack != null)
+			Modpack = FlxG.save.data.Modpack;
 		if(FlxG.save.data.middleScroll != null)
 			middleScroll = FlxG.save.data.middleScroll;
 		if(FlxG.save.data.opponentStrums != null)

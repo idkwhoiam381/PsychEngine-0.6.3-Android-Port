@@ -34,6 +34,10 @@ import flixel.util.FlxSave;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.system.FlxAssets.FlxShader;
 
+#if mobile
+import mobile.psychlua.Functions;
+#end
+
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
 #end
@@ -2901,6 +2905,9 @@ class FunkinLua {
 			#end
 			return list;
 		});
+		
+		#if android AndroidFunctions.implement(this); #end
+		#if mobile MobileFunctions.implement(this); #end
 
 		call('onCreate', []);
 		#end
