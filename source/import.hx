@@ -12,6 +12,14 @@ import mobile.flixel.FlxHitbox;
 import mobile.flixel.FlxVirtualPad;
 import mobile.flixel.FlxNewHitbox;
 
+// Lua
+#if LUA_ALLOWED
+import llua.Lua;
+import llua.LuaL;
+import llua.State;
+import llua.Convert;
+#end
+
 //Flixel
 import flixel.FlxG;
 import flixel.FlxSprite;
