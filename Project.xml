@@ -109,6 +109,7 @@
 	
 	<section if="MODS_ALLOWED">
 		<assets path='example_mods' rename='mods' embed='false'/>
+		<assets path='example_modpack' rename='modpack' embed='false' if="ModpackFolder" />
 	</section>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' if="desktop" />
 	<!-- <template path='mods' /> -->

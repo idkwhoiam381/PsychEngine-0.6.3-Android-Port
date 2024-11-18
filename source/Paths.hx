@@ -396,7 +396,7 @@ class Paths
 
 	#if MODS_ALLOWED
 	inline static public function mods(key:String = '') {
-		return #if mobile Sys.getCwd() + #end 'mods/' + key;
+		return if (ClientPrefs.Modpack) #if mobile Sys.getCwd() + #end 'modpack/' + key; else #if mobile Sys.getCwd() + #end 'mods/' + key;
 	}
 
 	inline static public function modsFont(key:String) {
@@ -455,7 +455,7 @@ class Paths
 				return fileToCheck;
 
 		}
-		return #if mobile Sys.getCwd() + #end 'mods/' + key;
+		return if (ClientPrefs.data.Modpack) #if mobile Sys.getCwd() + #end 'modpack/' + key; else #if mobile Sys.getCwd() + #end 'mods/' + key;
 	}
 
 	public static var globalMods:Array<String> = [];
