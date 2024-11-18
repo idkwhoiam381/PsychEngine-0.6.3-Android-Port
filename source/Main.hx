@@ -24,6 +24,7 @@ import sys.io.Process;
 #end
 #if mobile
 import mobile.backend.MobileScaleMode;
+import mobile.backend.SUtil;
 import mobile.states.CopyState;
 #end
 
