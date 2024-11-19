@@ -3293,11 +3293,13 @@ class FunkinLua {
 	}
 
 	var lastCalledFunction:String = '';
+	public static var lastCalledScript:FunkinLua = null;
 	public function call(func:String, args:Array<Dynamic>):Dynamic {
 		#if LUA_ALLOWED
 		if(closed) return Function_Continue;
 
 		lastCalledFunction = func;
+		lastCalledScript = this;
 		try {
 			if(lua == null) return Function_Continue;
 
