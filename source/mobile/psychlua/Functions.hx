@@ -2,6 +2,7 @@ package mobile.psychlua;
 
 import FunkinLua;
 import lime.ui.Haptic;
+import tjson.TJSON as Json;
 import mobile.backend.TouchFunctions;
 #if android
 import android.widget.Toast as AndroidToast;

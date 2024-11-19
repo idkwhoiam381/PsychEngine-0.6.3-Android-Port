@@ -130,7 +130,7 @@ class ControlsSubState extends MusicBeatSubstate {
 			if (controls.BACK) {
 				ClientPrefs.reloadControls();
 				#if mobile
-				if (SelectSubState.inControlsSubstate)
+				if (MobileControlSelectSubState.inControlsSubstate)
 				{
 				    SelectSubstate.leftArrow.visible = SelectSubstate.rightArrow.visible = SelectSubstate.grpControls.visible = SelectSubstate.exit.visible = SelectSubstate.reset.visible = SelectSubstate.keyboard.visible = SelectSubstate.tipText.visible = true;
 				    
@@ -146,7 +146,7 @@ class ControlsSubState extends MusicBeatSubstate {
                         SelectSubstate.extra1Pozition.visible = true;
                     }
                     SelectSubstate.titleText.text = 'Mobile Controls';
-				    SelectSubState.inControlsSubstate = false; // Not Needed But IDK
+				    MobileControlSelectSubState.inControlsSubstate = false; // Not Needed But IDK
 				}
 				#end
 				close();
