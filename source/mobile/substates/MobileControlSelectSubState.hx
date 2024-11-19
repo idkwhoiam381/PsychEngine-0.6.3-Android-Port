@@ -273,14 +273,14 @@ class MobileControlSelectSubState extends MusicBeatSubstate
                 reset.visible = false;
                 keyboard.visible = true;
                 remove(vpad);
-                vpad = new FlxVirtualPad(RIGHT_FULL, NONE, 0.75, ClientPrefs.globalAntialiasing);
+                vpad = new FlxVirtualPad(RIGHT_FULL, controlExtend, 0.75, ClientPrefs.globalAntialiasing);
                 add(vpad);
                 loadcustom(false);
             case 'Pad-Left':
                 reset.visible = false;
                 keyboard.visible = true;
                 remove(vpad);
-                vpad = new FlxVirtualPad(FULL, NONE, 0.75, ClientPrefs.globalAntialiasing);
+                vpad = new FlxVirtualPad(FULL, controlExtend, 0.75, ClientPrefs.globalAntialiasing);
                 add(vpad);
                 loadcustom(false);
             case 'Pad-Custom':
@@ -294,7 +294,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
                 reset.visible = false;
                 keyboard.visible = true;
                 remove(vpad);
-                vpad = new FlxVirtualPad(DUO, NONE, 0.75, ClientPrefs.globalAntialiasing);
+                vpad = new FlxVirtualPad(DUO, controlExtend, 0.75, ClientPrefs.globalAntialiasing);
                 add(vpad);
                 loadcustom(false);
             case 'Hitbox':
@@ -322,7 +322,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
             }
         }
 
-        if (daChoice == "Pad-Custom")
+        if (daChoice != "Hitbox" || daChoice != "Keyboard")
         {
             extra4Pozition.visible = true;
             extra3Pozition.visible = true;
@@ -391,7 +391,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
                 }
             }
         }
-        if (daChoice == 'Pad-Custom')
+        if (daChoice != "Hitbox" || daChoice != "Keyboard")
         {
             if (buttonistouched)
             {
@@ -455,6 +455,10 @@ class MobileControlSelectSubState extends MusicBeatSubstate
         if (daChoice == 'Pad-Custom')
         {
             config.savecustom(vpad);
+            extendConfig.savecustom(vpad);
+        }
+        else if (daChoice != "Hitbox" || daChoice != "Keyboard" || daChoice != 'Pad-Custom')
+        {
             extendConfig.savecustom(vpad);
         }
     }

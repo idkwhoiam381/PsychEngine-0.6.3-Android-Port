@@ -75,7 +75,7 @@ class FlxNewHitbox extends FlxSpriteGroup
                         add(buttonExtra3 = createHint(FlxG.width / 4 * 2, (FlxG.height / 5) * 4, Std.int(FlxG.width / 4), Std.int(FlxG.height / 5), 0x0000FF));
                         add(buttonExtra4 = createHint(FlxG.width / 4 * 3, (FlxG.height / 5) * 4, Std.int(FlxG.width / 4), Std.int(FlxG.height / 5), 0xFFFF00));     
                 }
-		    }else if (ClientPrefs.hitboxLocation == 'Top'){// Top
+		    }else{// Top
 		        add(buttonLeft = createHint(0, (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFFC24B99));
 		        add(buttonDown = createHint(FlxG.width / 4, (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF00FFFF));
 		        add(buttonUp = createHint(FlxG.width / 2, (FlxG.height / 5) * 1, Std.int(FlxG.width / 4), Std.int(FlxG.height * 0.8), 0xFF12FA05));
@@ -101,33 +101,7 @@ class FlxNewHitbox extends FlxSpriteGroup
                         add(buttonExtra3 = createHint(FlxG.width / 4 * 2, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height / 5), 0x0000FF));
                         add(buttonExtra4 = createHint(FlxG.width / 4 * 3, 0, Std.int(FlxG.width / 4), Std.int(FlxG.height / 5), 0x00FF00));      
                 }
-		    }else{ //middle
-		        add(buttonLeft = createHint(0, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0xFF00FF));
-		        add(buttonDown = createHint(FlxG.width / 5 * 1, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0x00FFFF));
-		        add(buttonUp = createHint(FlxG.width / 5 * 3, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0x00FF00));
-		        add(buttonRight = createHint(FlxG.width / 5 * 4 , 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0xFF0000));
-		        if (ClientPrefs.hitboxhint){
-        		hitbox_hint = new FlxSprite(0, 0).loadGraphic(Paths.image('mobilecontrols/hitbox/hitbox_hint'));
-        		add(hitbox_hint);
-        		}
-		        
-		        switch (ClientPrefs.extraKeys){
-    				case 1:		        
-                        add(buttonExtra1 = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 1), 0x00FF00));
-    		        case 2:                
-                        add(buttonExtra1 = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.5), 0x00FF00));
-                        add(buttonExtra2 = createHint(FlxG.width / 5 * 2, FlxG.height / 2, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.5), 0xFF0000));
-                    case 3:		        
-                        add(buttonExtra1 = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.3), 0x00FF00));
-                        add(buttonExtra2 = createHint(FlxG.width / 5 * 2, FlxG.height / 2, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.3), 0xFF0000));
-                        add(buttonExtra3 = createHint(FlxG.width / 5 * 2, FlxG.height / 2 * 2, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.3), 0x0000FF)); 
-    		        case 4:                                  
-    		            add(buttonExtra1 = createHint(FlxG.width / 5 * 2, 0, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.25), 0x00FF00));
-                        add(buttonExtra2 = createHint(FlxG.width / 5 * 2, FlxG.height / 2, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.25), 0xFF0000));
-                        add(buttonExtra3 = createHint(FlxG.width / 5 * 2, FlxG.height / 2 * 2, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.25), 0x0000FF)); 
-                        add(buttonExtra4 = createHint(FlxG.width / 5 * 2, FlxG.height / 2 * 3, Std.int(FlxG.width / 5), Std.int(FlxG.height * 0.25), 0xFFFF00));
-                }
-            }
+		    }
 		}
 		
 		scrollFactor.set();
