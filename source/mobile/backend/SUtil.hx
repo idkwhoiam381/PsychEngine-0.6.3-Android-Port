@@ -46,6 +46,46 @@ class SUtil
 
 		return daPath;
 	}
+	
+	public static function createDirectories(directory:String):Void
+	{
+		try
+		{
+			if (FileSystem.exists(directory) && FileSystem.isDirectory(directory))
+				return;
+		}
+		catch (e:haxe.Exception)
+		{
+			trace('Something went wrong while looking at directory. (${e.message})');
+		}
+
+		var total:String = '';
+		if (directory.substr(0, 1) == '/')
+			total = '/';
+
+		var parts:Array<String> = directory.split('/');
+		if (parts.length > 0 && parts[0].indexOf(':') > -1)
+			parts.shift();
+
+		for (part in parts)
+		{
+			if (part != '.' && part != '')
+			{
+				if (total != '' && total != '/')
+					total += '/';
+
+				total += part;
+
+				try
+				{
+					if (!FileSystem.exists(total))
+						FileSystem.createDirectory(total);
+				}
+				catch (e:Exception)
+					trace('Error while creating directory. (${e.message}');
+			}
+		}
+	}
 
 	public static function mkDirs(directory:String):Void
 	{
