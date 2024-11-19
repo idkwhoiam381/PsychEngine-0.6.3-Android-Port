@@ -33,7 +33,7 @@ import haxe.io.Path;
 import sys.FileSystem;
 import sys.io.File;
 import mobile.options.MobileOptionsSubState;
-import mobile.backend.SUtil;
+import mobile.backend.StorageUtil;
 
 using StringTools;
 
