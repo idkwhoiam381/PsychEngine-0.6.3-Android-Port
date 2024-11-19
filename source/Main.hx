@@ -141,7 +141,7 @@ class Main extends Sprite
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
 		
-		// shader coords fix
+		// shader and mobile device coords fix
 		FlxG.signals.gameResized.add(function (w, h) {
 			if(fpsVar != null)
 				fpsVar.positionFPS(10, 3, Math.min(w / FlxG.width, h / FlxG.height));

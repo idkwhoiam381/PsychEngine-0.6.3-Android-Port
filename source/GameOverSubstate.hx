@@ -86,6 +86,10 @@ class GameOverSubstate extends MusicBeatSubstate
 			var lerpVal:Float = CoolUtil.boundTo(elapsed * 0.6, 0, 1);
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 		}
+		
+		#if mobile
+		addVirtualPadCamera();
+		#end
 
 		if (controls.ACCEPT)
 		{
