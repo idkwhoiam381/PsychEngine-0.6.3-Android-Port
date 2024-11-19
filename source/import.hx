@@ -1,5 +1,12 @@
 import Paths;
 
+#if sys
+import sys.*;
+import sys.io.*;
+#elseif js
+import js.html.*;
+#end
+
 // Mobile Things
 import mobile.flixel.*;
 import mobile.states.*;

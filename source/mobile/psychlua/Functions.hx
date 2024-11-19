@@ -25,7 +25,7 @@ class MobileFunctions
 			if (period == null)
 				period = 0;
 			if (duration == null)
-				return FunkinLua.luaTrace('vibrate: No duration specified.');
+				return FunkinLua.instance.luaTrace('vibrate: No duration specified.');
 			return Haptic.vibrate(period, duration);
 		});
 		
@@ -37,7 +37,7 @@ class MobileFunctions
 			var obj = PlayState.instance.getLuaObject(object);
 			if (obj == null)
 			{
-				FunkinLua.luaTrace('touchPressedObject: $object does not exist.');
+				FunkinLua.instance.luaTrace('touchPressedObject: $object does not exist.');
 				return false;
 			}
 			return TouchFunctions.touchOverlapObject(obj) && TouchFunctions.touchPressed;
@@ -48,7 +48,7 @@ class MobileFunctions
 			var obj = PlayState.instance.getLuaObject(object);
 			if (obj == null)
 			{
-				FunkinLua.luaTrace('touchJustPressedObject: $object does not exist.');
+				FunkinLua.instance.luaTrace('touchJustPressedObject: $object does not exist.');
 				return false;
 			}
 			return TouchFunctions.touchOverlapObject(obj) && TouchFunctions.touchJustPressed;
@@ -59,7 +59,7 @@ class MobileFunctions
 			var obj = PlayState.instance.getLuaObject(object);
 			if (obj == null)
 			{
-				FunkinLua.luaTrace('touchJustPressedObject: $object does not exist.');
+				FunkinLua.instance.luaTrace('touchJustPressedObject: $object does not exist.');
 				return false;
 			}
 			return TouchFunctions.touchOverlapObject(obj) && TouchFunctions.touchJustReleased;
@@ -70,7 +70,7 @@ class MobileFunctions
 			var obj = PlayState.instance.getLuaObject(object);
 			if (obj == null)
 			{
-				FunkinLua.luaTrace('touchOverlapsObject: $object does not exist.');
+				FunkinLua.instance.luaTrace('touchOverlapsObject: $object does not exist.');
 				return false;
 			}
 			return TouchFunctions.touchOverlapObject(obj);
@@ -114,16 +114,16 @@ class AndroidFunctions
 					hint = null;
 			}
 			if (hint == null)
-				return FunkinLua.luaTrace('setOrientation: No orientation specified.');
+				return FunkinLua.instance.luaTrace('setOrientation: No orientation specified.');
 			PsychJNI.setOrientation(FlxG.stage.stageWidth, FlxG.stage.stageHeight, false, hint);
 		});
 		Lua_helper.add_callback(lua, "minimizeWindow", () -> AndroidTools.minimizeWindow());
 		Lua_helper.add_callback(lua, "showToast", function(text:String, duration:Null<Int>, ?xOffset:Null<Int>, ?yOffset:Null<Int>)
 		{
 			if (text == null)
-				return FunkinLua.luaTrace('showToast: No text specified.');
+				return FunkinLua.instance.luaTrace('showToast: No text specified.');
 			else if (duration == null)
-				return FunkinLua.luaTrace('showToast: No duration specified.');
+				return FunkinLua.instance.luaTrace('showToast: No duration specified.');
 
 			if (xOffset == null)
 				xOffset = 0;
@@ -138,7 +138,7 @@ class AndroidFunctions
 		Lua_helper.add_callback(lua, "clipboardGetText", () -> PsychJNI.clipboardGetText());
 		Lua_helper.add_callback(lua, "clipboardSetText", function(text:Null<String>):Void
 		{
-			if (text != null) return FunkinLua.luaTrace('clipboardSetText: No text specified.');
+			if (text != null) return FunkinLua.instance.luaTrace('clipboardSetText: No text specified.');
 			PsychJNI.clipboardSetText(text);
 		});
 
@@ -146,7 +146,7 @@ class AndroidFunctions
 
 		Lua_helper.add_callback(lua, "setActivityTitle", function(text:Null<String>):Void
 		{
-			if (text != null) return FunkinLua.luaTrace('setActivityTitle: No text specified.');
+			if (text != null) return FunkinLua.instance.luaTrace('setActivityTitle: No text specified.');
 			PsychJNI.setActivityTitle(text);
 		});
 	}
