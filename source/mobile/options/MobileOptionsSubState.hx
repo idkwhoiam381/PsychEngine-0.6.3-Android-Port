@@ -41,7 +41,7 @@ class MobileOptionsSubState extends BaseOptionsMenu
 {
     #if android
 	var storageTypes:Array<String> = ["EXTERNAL", "EXTERNAL_DATA", "EXTERNAL_OBB", "EXTERNAL_MEDIA"];
-	var externalPaths:Array<String> = SUtil.checkExternalPaths(true);
+	var externalPaths:Array<String> = StorageUtil.checkExternalPaths(true);
 	final lastStorageType:String = ClientPrefs.storageType;
 	#end
 	
@@ -156,7 +156,7 @@ class MobileOptionsSubState extends BaseOptionsMenu
 		if (ClientPrefs.storageType != lastStorageType) {
 			onStorageChange();
 			ClientPrefs.saveSettings();
-			SUtil.showPopUp('Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.', 'Notice!');
+			CoolUtil.showPopUp('Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.', 'Notice!');
 			lime.system.System.exit(0);
 		}
 		#end

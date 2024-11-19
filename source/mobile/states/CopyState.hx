@@ -43,7 +43,7 @@ class CopyState extends MusicBeatState
 			return;
 		}
 
-		SUtil.showPopUp("Seems like you have some missing files that are necessary to run the game\nPress OK to begin the copy process", "Notice!");
+		CoolUtil.showPopUp("Seems like you have some missing files that are necessary to run the game\nPress OK to begin the copy process", "Notice!");
 
 		shouldCopy = true;
 
@@ -83,7 +83,7 @@ class CopyState extends MusicBeatState
 			{
 				if (failedFiles.length > 0)
 				{
-					SUtil.showPopUp(failedFiles.join('\n'), 'Failed To Copy ${failedFiles.length} File.');
+					CoolUtil.showPopUp(failedFiles.join('\n'), 'Failed To Copy ${failedFiles.length} File.');
 					if (!FileSystem.exists('logs'))
 						FileSystem.createDirectory('logs');
 					File.saveContent('logs/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '-CopyState' + '.txt', failedFilesStack.join('\n'));
@@ -111,7 +111,7 @@ class CopyState extends MusicBeatState
 		{
 			var directory = Path.directory(file);
 			if (!FileSystem.exists(directory))
-				SUtil.createDirectories(directory);
+				StorageUtil.createDirectories(directory);
 			try
 			{
 				if (OpenFLAssets.exists(getFile(file)))
@@ -145,7 +145,7 @@ class CopyState extends MusicBeatState
 			if (fileData == null)
 				fileData = '';
 			if (!FileSystem.exists(directory))
-				SUtil.createDirectories(directory);
+				StorageUtil.createDirectories(directory);
 			File.saveContent(Path.join([directory, fileName]), fileData);
 		}
 		catch (e:haxe.Exception)

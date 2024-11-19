@@ -103,6 +103,8 @@ class FunkinLua {
 				trace('Error on lua script! ' + resultStr);
 				#if windows
 				lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
+				#elseif android
+                CoolUtil.showPopUp(resultStr, "Error on .LUA script!");
 				#else
 				luaTrace('Error loading lua script: "$script"\n' + resultStr, true, false, FlxColor.RED);
 				#end
