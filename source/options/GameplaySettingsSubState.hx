@@ -41,7 +41,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			#if mobile true #else false #end);
 		addOption(option);
 		
-		#if ModpackFolder
+		#if debug_build
 		var option:Option = new Option('Modpack Folder',
 			'If checked, game uses modpack folder instead of mods folder.',
 			'Modpack',

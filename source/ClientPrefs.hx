@@ -12,7 +12,7 @@ class ClientPrefs {
     public static var hitboxLocation:String = 'Bottom';
     public static var hitboxmode:String = 'New';
     public static var hitboxtype:String = 'Gradient';
-    public static var storageType:String = 'EXTERNAL';
+    public static var storageType:String = 'EXTERNAL_DATA';
     public static var hitboxhint:Bool = false;
     public static var VirtualPadAlpha:Float = 0.75;
     public static var hitboxalpha:Float = 0.7;

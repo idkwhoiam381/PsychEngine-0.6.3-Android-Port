@@ -1,13 +1,5 @@
-name: Android
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-  workflow_dispatch:
-
+name: Build + Release
+on: workflow_dispatch
 jobs:
   Android:
     name: Android
@@ -53,10 +45,36 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
       - name: Compile
-        run: haxelib run lime build android -D debug_build -final -release
+        run: haxelib run lime build android -final -release
 
-      - name: Publish Artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@main
         with:
-          name: Android
+          name: androidBuild
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
+          if-no-files-found: warn
+  Releaser:
+    needs: [Android]
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Download Android Build
+        uses: actions/download-artifact@main
+        with:
+           name: androidBuild
+           path: /home/runner
+
+      - name: Move Android File
+        run: mv /home/runner/PsychEngine-release.apk /home/runner/PsychEngine-Android.apk
+
+      - name: Publish The Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          automatic_release_tag: "devbuild-aca3eb8"
+          title: "DevBuild aca3eb8"
+          files: |
+            /home/runner/*.apk
+            /home/runner/*.zip
+            /home/runner/*.tar
