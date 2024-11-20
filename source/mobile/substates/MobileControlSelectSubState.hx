@@ -322,7 +322,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
             }
         }
 
-        if (daChoice != "Hitbox" || daChoice != "Keyboard")
+        if (daChoice != "Hitbox" && daChoice != "Keyboard")
         {
             extra4Pozition.visible = true;
             extra3Pozition.visible = true;
@@ -391,7 +391,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
                 }
             }
         }
-        if (daChoice != "Hitbox" || daChoice != "Keyboard")
+        if (daChoice != "Hitbox" && daChoice != "Keyboard")
         {
             if (buttonistouched)
             {
@@ -457,7 +457,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
             config.savecustom(vpad);
             extendConfig.savecustom(vpad);
         }
-        else if (daChoice != "Hitbox" || daChoice != "Keyboard" || daChoice != 'Pad-Custom')
+        else if (daChoice != "Hitbox" && daChoice != "Keyboard" && daChoice != 'Pad-Custom')
         {
             extendConfig.savecustom(vpad);
         }

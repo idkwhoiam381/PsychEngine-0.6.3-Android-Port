@@ -29,7 +29,7 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Note Colors', #if mobile 'Mobile Controls' #else 'Controls' #end, 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay', 'Mobile Options'];
+	var options:Array<String> = ['Note Colors', #if mobile 'Mobile Controls' #else 'Controls' #end, 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay' #if mobile , 'Mobile Options' #end];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -97,6 +97,12 @@ class OptionsState extends MusicBeatState
 
 		changeSelection();
 		ClientPrefs.saveSettings();
+		
+		var tipText:FlxText = new FlxText(10, 12, 0, 'Press E to Go In Extra Key Return Menu', 16);
+		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		tipText.borderSize = 2;
+		tipText.scrollFactor.set();
+		add(tipText);
 		
 		#if mobile
 		addVirtualPad(UP_DOWN, A_B_E);
