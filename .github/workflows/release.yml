@@ -72,8 +72,8 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
-          automatic_release_tag: "devbuild-aca3eb8"
-          title: "DevBuild aca3eb8"
+          automatic_release_tag: "v1.0"
+          title: "First Release"
           files: |
             /home/runner/*.apk
             /home/runner/*.zip
