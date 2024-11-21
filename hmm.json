@@ -1,10 +1,84 @@
 {
   "dependencies": [
     {
+      "name": "lime",
+      "type": "git",
+      "ref": "develop",
+      "url": "https://github.com/mcagabe19-stuff/lime-8.1.3"
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib",
+      "version": "9.2.2"
+    },
+    {
+      "name": "flixel",
+      "type": "haxelib",
+      "version": "5.2.2"
+    },
+    {
+      "name": "flixel-addons",
+      "type": "git",
+      "ref": "dev",
+      "url": "https://github.com/Prohack101010/flixel-addons-psych-d-up-engine"
+    },
+    {
+      "name": "flixel-ui",
+      "type": "haxelib",
+      "version": "2.5.0"
+    },
+    {
+      "name": "flixel-tools",
+      "type": "haxelib",
+      "version": "1.5.1"
+    },
+    {
+      "name": "hxcpp",
+      "type":"git",
+      "dir":null,
+      "ref":"master",
+      "url":"https://github.com/mcagabe19-stuff/hxcpp"
+    },
+    {
+      "name": "tjson",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "hxjsonast",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "hxCodec",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/Prohack101010/hxCodec-2.6.0-with-MP4Handler"
+    },
+    {
+      "name": "hscript",
+      "type": "haxelib",
+      "version": "2.4.0"
+    },
+    {
+      "name": "hxcpp-debug-server",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "discord_rpc",
       "type": "git",
+      "dir": null,
       "ref": "master",
       "url": "https://github.com/Aidan63/linc_discord-rpc"
+    },
+    {
+      "name": "hscript-ex",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/ianharrigan/hscript-ex"
     },
     {
       "name": "linc_luajit",
@@ -16,57 +90,9 @@
     {
       "name":"extension-androidtools",
       "type":"git",
+      "dir":null,
       "ref":"main",
       "url":"https://github.com/MAJigsaw77/extension-androidtools"
-    },
-    {
-      "name": "flixel",
-      "type": "git",
-      "ref": "dev",
-      "url": "https://github.com/Prohack101010/flixel"
-    },
-    {
-      "name": "flixel-addons",
-      "type": "haxelib",
-      "version": "2.11.0"
-    },
-    {
-      "name": "flixel-ui",
-      "type": "haxelib",
-      "version": "2.4.0"
-    },
-    {
-      "name": "hscript",
-      "type": "haxelib",
-      "version": "2.4.0"
-    },
-    {
-      "name": "hxCodec",
-      "type": "git",
-      "ref": "main",
-      "url": "https://github.com/Prohack101010/hxCodec-2.6.0-with-MP4Handler"
-    },
-    {
-      "name": "hxcpp",
-      "type": "git",
-      "ref": "master",
-      "url": "https://github.com/mcagabe19-stuff/hxcpp.git"
-    },
-    {
-      "name": "lime",
-      "type": "git",
-      "ref": "develop",
-      "url": "https://github.com/mcagabe19-stuff/lime-8.1.3"
-    },
-    {
-      "name": "tjson",
-      "type": "haxelib",
-      "version": null
-    },
-    {
-      "name": "openfl",
-      "type": "haxelib",
-      "version": "9.2.2"
     }
   ]
 }

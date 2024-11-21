@@ -34,6 +34,10 @@ import flixel.util.FlxSave;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.system.FlxAssets.FlxShader;
 
+#if mobile
+import mobile.psychlua.Functions;
+#end
+
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
 #end
@@ -60,9 +64,9 @@ import Discord;
 using StringTools;
 
 class FunkinLua {
-	public static var Function_Stop:Dynamic = "##PSYCHLUA_FUNCTIONSTOP";
-	public static var Function_Continue:Dynamic = "##PSYCHLUA_FUNCTIONCONTINUE";
-	public static var Function_StopLua:Dynamic = "##PSYCHLUA_FUNCTIONSTOPLUA";
+	public static var Function_Stop:Dynamic = 1;
+	public static var Function_Continue:Dynamic = 0;
+	public static var Function_StopLua:Dynamic = 2;
 
 	//public var errorHandler:String->Void;
 	#if LUA_ALLOWED
@@ -97,8 +101,10 @@ class FunkinLua {
 			var resultStr:String = Lua.tostring(lua, result);
 			if(resultStr != null && result != 0) {
 				trace('Error on lua script! ' + resultStr);
-				#if (windows || android)
+				#if windows
 				lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
+				#elseif android
+                CoolUtil.showPopUp(resultStr, "Error on .LUA script!");
 				#else
 				luaTrace('Error loading lua script: "$script"\n' + resultStr, true, false, FlxColor.RED);
 				#end
@@ -258,11 +264,11 @@ class FunkinLua {
 		});
 
 		// shader shit
-		Lua_helper.add_callback(lua, "initLuaShader", function(name:String) {
+		Lua_helper.add_callback(lua, "initLuaShader", function(name:String, glslVersion:Int = 120) {
 			if(!ClientPrefs.shaders) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
-			return initLuaShader(name);
+			return initLuaShader(name, glslVersion);
 			#else
 			luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
@@ -315,11 +321,13 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
+				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getBool(prop);
 			#else
 			luaTrace("getShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -328,11 +336,13 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
+				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getBoolArray(prop);
 			#else
 			luaTrace("getShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -341,11 +351,13 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
+				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getInt(prop);
 			#else
 			luaTrace("getShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -354,11 +366,13 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
+				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getIntArray(prop);
 			#else
 			luaTrace("getShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -367,11 +381,13 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
+				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getFloat(prop);
 			#else
 			luaTrace("getShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -380,11 +396,13 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
+				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getFloatArray(prop);
 			#else
 			luaTrace("getShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -464,7 +482,7 @@ class FunkinLua {
 				shader.setSampler2D(prop, value.bitmap);
 			}
 			#else
-			luaTrace("setSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 		});
 
@@ -527,7 +545,7 @@ class FunkinLua {
 				doPush = true;
 			}
 			else {
-				cervix = Sys.getCwd() + Paths.getPreloadPath(cervix);
+				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
 				}
@@ -551,6 +569,8 @@ class FunkinLua {
 
 				}
 			}
+			Lua.pushnil(lua);
+
 		});
 
 		Lua_helper.add_callback(lua, "getGlobalFromScript", function(?luaFile:String, ?global:String){ // returns the global from a script
@@ -580,7 +600,7 @@ class FunkinLua {
 				doPush = true;
 			}
 			else {
-				cervix = Sys.getCwd() + Paths.getPreloadPath(cervix);
+				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
 				}
@@ -616,6 +636,7 @@ class FunkinLua {
 
 				}
 			}
+			Lua.pushnil(lua);
 		});
 		Lua_helper.add_callback(lua, "setGlobalFromScript", function(luaFile:String, global:String, val:Dynamic){ // returns the global from a script
 			var cervix = luaFile + ".lua";
@@ -632,7 +653,7 @@ class FunkinLua {
 				doPush = true;
 			}
 			else {
-				cervix = Sys.getCwd() + Paths.getPreloadPath(cervix);
+				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
 				}
@@ -654,6 +675,7 @@ class FunkinLua {
 
 				}
 			}
+			Lua.pushnil(lua);
 		});
 		/*Lua_helper.add_callback(lua, "getGlobals", function(luaFile:String){ // returns a copy of the specified file's globals
 			var cervix = luaFile + ".lua";
@@ -670,7 +692,7 @@ class FunkinLua {
 				doPush = true;
 			}
 			else {
-				cervix = Sys.getCwd() + Paths.getPreloadPath(cervix);
+				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
 				}
@@ -691,6 +713,7 @@ class FunkinLua {
 						var tableIdx = Lua.gettop(lua);
 
 						Lua.pushvalue(luaInstance.lua, Lua.LUA_GLOBALSINDEX);
+						Lua.pushnil(luaInstance.lua);
 						while(Lua.next(luaInstance.lua, -2) != 0) {
 							// key = -2
 							// value = -1
@@ -736,6 +759,7 @@ class FunkinLua {
 
 				}
 			}
+			Lua.pushnil(lua);
 		});*/
 		Lua_helper.add_callback(lua, "isRunning", function(luaFile:String){
 			var cervix = luaFile + ".lua";
@@ -752,7 +776,7 @@ class FunkinLua {
 				doPush = true;
 			}
 			else {
-				cervix = Sys.getCwd() + Paths.getPreloadPath(cervix);
+				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
 				}
@@ -792,7 +816,7 @@ class FunkinLua {
 				doPush = true;
 			}
 			else {
-				cervix = Sys.getCwd() + Paths.getPreloadPath(cervix);
+				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
 				}
@@ -837,7 +861,7 @@ class FunkinLua {
 				doPush = true;
 			}
 			else {
-				cervix = Sys.getCwd() + Paths.getPreloadPath(cervix);
+				cervix = Paths.getPreloadPath(cervix);
 				if(FileSystem.exists(cervix)) {
 					doPush = true;
 				}
@@ -885,6 +909,7 @@ class FunkinLua {
 			#end
 
 			if(retVal != null && !isOfTypes(retVal, [Bool, Int, Float, String, Array])) retVal = null;
+			if(retVal == null) Lua.pushnil(lua);
 			return retVal;
 		});
 
@@ -960,6 +985,7 @@ class FunkinLua {
 			else
 				result = getVarInArray(getInstance(), variable);
 
+			if(result == null) Lua.pushnil(lua);
 			return result;
 		});
 		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic) {
@@ -981,6 +1007,7 @@ class FunkinLua {
 			if(Std.isOfType(realObject, FlxTypedGroup))
 			{
 				var result:Dynamic = getGroupStuff(realObject.members[index], variable);
+				if(result == null) Lua.pushnil(lua);
 				return result;
 			}
 
@@ -993,9 +1020,11 @@ class FunkinLua {
 				else
 					result = getGroupStuff(leArray, variable);
 
+				if(result == null) Lua.pushnil(lua);
 				return result;
 			}
 			luaTrace("getPropertyFromGroup: Object #" + index + " from group: " + obj + " doesn't exist!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 		});
 		Lua_helper.add_callback(lua, "setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic) {
@@ -1031,7 +1060,7 @@ class FunkinLua {
 			Reflect.getProperty(getInstance(), obj).remove(Reflect.getProperty(getInstance(), obj)[index]);
 		});
 
-		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
+		    		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
 			@:privateAccess
 			#if mobile
 			var myClass:Dynamic = classCheck(classVar);
@@ -1561,7 +1590,7 @@ class FunkinLua {
 				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT_P');
 				case 'accept': key = PlayState.instance.getControl('ACCEPT');
 				case 'back': key = PlayState.instance.getControl('BACK');
-				case 'pause': key = PlayState.instance.getControl('PAUSE') || FlxG.android.justPressed.BACK;
+				case 'pause': key = PlayState.instance.getControl('PAUSE');
 				case 'reset': key = PlayState.instance.getControl('RESET');	
 				#if desktop
 				case 'space': key = FlxG.keys.justPressed.SPACE;//an extra key for convinience
@@ -1590,7 +1619,7 @@ class FunkinLua {
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP');
 				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT');
-				#if desktop
+				#if mobile
 				case 'space': key = FlxG.keys.pressed.SPACE;//an extra key for convinience
 				#end
 				case 'ui_left': key = PlayState.instance.getControl('UI_LEFT');
@@ -1617,7 +1646,7 @@ class FunkinLua {
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN_R');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP_R');
 				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT_R');		
-				#if desktop
+				#if mobile
 				case 'space': key = FlxG.keys.justReleased.SPACE;//an extra key for convinience
 				#end
 				case 'ui_left': key = PlayState.instance.getControl('UI_LEFT_R');
@@ -2271,7 +2300,7 @@ class FunkinLua {
 			path = Paths.modsJson(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
 			if(!FileSystem.exists(path))
 			#end
-				path = Sys.getCwd() + Paths.json(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
+				path = Paths.json(Paths.formatToSongPath(PlayState.SONG.song) + '/' + dialogueFile);
 
 			luaTrace('startDialogue: Trying to load dialogue: ' + path);
 
@@ -2437,6 +2466,7 @@ class FunkinLua {
 			#end
 		});
 
+
 		// LUA TEXTS
 		Lua_helper.add_callback(lua, "makeLuaText", function(tag:String, text:String, width:Int, x:Float, y:Float) {
 			tag = tag.replace('.', '');
@@ -2547,6 +2577,7 @@ class FunkinLua {
 				return obj.text;
 			}
 			luaTrace("getTextString: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 		});
 		Lua_helper.add_callback(lua, "getTextSize", function(tag:String) {
@@ -2565,6 +2596,7 @@ class FunkinLua {
 				return obj.font;
 			}
 			luaTrace("getTextFont: Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			Lua.pushnil(lua);
 			return null;
 		});
 		Lua_helper.add_callback(lua, "getTextWidth", function(tag:String) {
@@ -2875,6 +2907,9 @@ class FunkinLua {
 			#end
 			return list;
 		});
+		
+		#if android AndroidFunctions.implement(this); #end
+		#if mobile MobileFunctions.implement(this); #end
 
 		call('onCreate', []);
 		#end
@@ -2940,91 +2975,6 @@ class FunkinLua {
 	}
 	public static function getVarInArray(instance:Dynamic, variable:String):Any
 	{
-		#if android //Extend for check control for android,you can try to extend other key at same way but I'm so lazy. --Write by NF|beihu(北狐丶逐梦)
-	        var pressCheck:Dynamic;
-	        if (MusicBeatState.mobilec.newhbox != null){ //check for android control and dont check for keyboard
-			    if (variable == 'keys.justPressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed){
-    			    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.pressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.justReleased.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                
-                if (variable == 'keys.justPressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed){
-    			    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.pressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.justReleased.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                
-                if (variable == 'keys.justPressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed){
-    			    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.pressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.justReleased.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                
-                if (variable == 'keys.justPressed.E' && MusicBeatState.mobilec.newhbox.buttonExtra4.justPressed){
-    			    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.pressed.E' && MusicBeatState.mobilec.newhbox.buttonExtra4.pressed){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.justReleased.E' && MusicBeatState.mobilec.newhbox.buttonExtra4.justReleased){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-            }
-            
-            if (MusicBeatState.mobilec.vpad != null){ //check for android control and dont check for keyboard
-			    if (variable == 'keys.justPressed.SPACE' && MusicBeatState.mobilec.vpad.buttonG.justPressed){
-    			    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.pressed.SPACE' && MusicBeatState.mobilec.vpad.buttonG.pressed){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.justReleased.SPACE' && MusicBeatState.mobilec.vpad.buttonG.justReleased){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                
-                if (variable == 'keys.justPressed.SHIFT' && MusicBeatState.mobilec.vpad.buttonF.justPressed){
-    			    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.pressed.SHIFT' && MusicBeatState.mobilec.vpad.buttonF.pressed){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-                else if (variable == 'keys.justReleased.SHIFT' && MusicBeatState.mobilec.vpad.buttonF.justReleased){
-                    pressCheck = true;
-                    return pressCheck;
-                }
-            }
-        #end
-        
 		var shit:Array<String> = variable.split('[');
 		if(shit.length > 1)
 		{
@@ -3079,7 +3029,7 @@ class FunkinLua {
 	}
 	#end
 	
-	function initLuaShader(name:String)
+	function initLuaShader(name:String, ?glslVersion:Int = 120)
 	{
 		if(!ClientPrefs.shaders) return false;
 
@@ -3090,10 +3040,8 @@ class FunkinLua {
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Sys.getCwd() + Paths.getPreloadPath('shaders/')];
-
+		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
-
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
 
 		for(mod in Paths.getGlobalMods())
@@ -3314,7 +3262,7 @@ class FunkinLua {
 		return PlayState.instance.camGame;
 	}
 
-	public function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
+	public static function luaTrace(text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
 		#if LUA_ALLOWED
 		if(ignoreCheck || getBool('luaDebugMode')) {
 			if(deprecated && !getBool('luaDeprecatedWarnings')) {
@@ -3347,11 +3295,13 @@ class FunkinLua {
 	}
 
 	var lastCalledFunction:String = '';
+	public static var lastCalledScript:FunkinLua = null;
 	public function call(func:String, args:Array<Dynamic>):Dynamic {
 		#if LUA_ALLOWED
 		if(closed) return Function_Continue;
 
 		lastCalledFunction = func;
+		lastCalledScript = this;
 		try {
 			if(lua == null) return Function_Continue;
 
@@ -3465,7 +3415,11 @@ class FunkinLua {
 	}
 
 	#if LUA_ALLOWED
-	public function getBool(variable:String) {
+	public static function getBool(variable:String) {
+		if(lastCalledScript == null) return false;
+
+		var lua:State = lastCalledScript.lua;
+		if(lua == null) return false;
 		var result:String = null;
 		Lua.getglobal(lua, variable);
 		result = Convert.fromLua(lua, -1);
@@ -3559,7 +3513,7 @@ class DebugLuaText extends FlxText
 	public function new(text:String, parentGroup:FlxTypedGroup<DebugLuaText>, color:FlxColor) {
 		this.parentGroup = parentGroup;
 		super(10, 10, 0, text, 16);
-		setFormat(Paths.font("vcr.ttf"), 16, color, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		setFormat(Paths.font("vcr.ttf"), 20, color, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scrollFactor.set();
 		borderSize = 1;
 	}
