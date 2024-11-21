@@ -2143,7 +2143,6 @@ class PlayState extends MusicBeatState
 
 			#if mobile
 			startedCountdown = MusicBeatState.mobilec.visible = true;
-			if (checkHitbox != true) MusicBeatState.mobilec.alpha = 1;
 			#else
 			startedCountdown = true;
 			#end
