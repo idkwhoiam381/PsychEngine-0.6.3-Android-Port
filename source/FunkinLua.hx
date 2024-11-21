@@ -71,6 +71,12 @@ class FunkinLua {
 	public var camTarget:FlxCamera;
 	public var scriptName:String = '';
 	public var closed:Bool = false;
+	#if mobile
+    public var extra1:String = ClientPrefs.extraKeyReturn1.toUpperCase();
+	public var extra2:String = ClientPrefs.extraKeyReturn2.toUpperCase();
+	public var extra3:String = ClientPrefs.extraKeyReturn3.toUpperCase();
+	public var extra4:String = ClientPrefs.extraKeyReturn4.toUpperCase();
+	#end
 
 	#if hscript
 	public static var hscript:HScript = null;

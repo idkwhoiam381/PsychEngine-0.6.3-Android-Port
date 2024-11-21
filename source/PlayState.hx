@@ -12,7 +12,6 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxObject;
-import flixel.FlxObjectOld;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxSubState;
@@ -165,9 +164,9 @@ class PlayState extends MusicBeatState
 
 	//Handles the new epic mega sexy cam code that i've done
 	public var camFollow:FlxPoint;
-	public var camFollowPos:FlxObjectOld;
+	public var camFollowPos:FlxObject;
 	private static var prevCamFollow:FlxPoint;
-	private static var prevCamFollowPos:FlxObjectOld;
+	private static var prevCamFollowPos:FlxObject;
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
@@ -1113,7 +1112,7 @@ class PlayState extends MusicBeatState
 		// add(strumLine);
 
 		camFollow = new FlxPoint();
-		camFollowPos = new FlxObjectOld(0, 0, 1, 1);
+		camFollowPos = new FlxObject(0, 0, 1, 1);
 
 		snapCamFollowToPos(camPos.x, camPos.y);
 		if (prevCamFollow != null)
