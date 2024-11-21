@@ -147,6 +147,7 @@ class PlayState extends MusicBeatState
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
+	public static var MoveOption:Bool;
 
 	public var spawnTime:Float = 2000;
 
@@ -870,7 +871,7 @@ class PlayState extends MusicBeatState
 		// "GLOBAL" SCRIPTS
 		#if LUA_ALLOWED
 		var filesPushed:Array<String> = [];
-		var foldersToCheck:Array<String> = [Paths.getPreloadPath('scripts/')];
+		var foldersToCheck:Array<String> = [Sys.getCwd() + Paths.getPreloadPath('scripts/')];
 
 		#if MODS_ALLOWED
 		foldersToCheck.insert(0, Paths.mods('scripts/'));
@@ -994,12 +995,12 @@ class PlayState extends MusicBeatState
 
 		var file:String = Paths.json(songName + '/dialogue'); //Checks for json/Psych Engine dialogue
 		if (OpenFlAssets.exists(file)) {
-			dialogueJson = DialogueBoxPsych.parseDialogue(file);
+			dialogueJson = DialogueBoxPsych.parseDialogue(Sys.getCwd() + file);
 		}
 
 		var file:String = Paths.txt(songName + '/' + songName + 'Dialogue'); //Checks for vanilla/Senpai dialogue
 		if (OpenFlAssets.exists(file)) {
-			dialogue = CoolUtil.coolTextFile(file);
+			dialogue = CoolUtil.coolTextFile(Sys.getCwd() + file);
 		}
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
 		// doof.x += 70;
@@ -1068,6 +1069,20 @@ class PlayState extends MusicBeatState
 
 		opponentStrums = new FlxTypedGroup<StrumNote>();
 		playerStrums = new FlxTypedGroup<StrumNote>();
+		
+		#if mobile
+		addMobileControls();
+		if (ClientPrefs.hitboxmode == 'Classic') {
+		MusicBeatState.mobilec.visible = false;
+		}
+	        if (ClientPrefs.hitboxmode == 'New') {
+		MusicBeatState.mobilec.visible = true;
+		if (!ClientPrefs.hitboxhint) {
+		MusicBeatState.mobilec.alpha = 0.000001;
+		}
+		}
+		
+		#end
 
 		// startCountdown();
 
@@ -1083,7 +1098,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				luaToLoad = Paths.getPreloadPath('custom_notetypes/' + notetype + '.lua');
+				luaToLoad = Sys.getCwd() + Paths.getPreloadPath('custom_notetypes/' + notetype + '.lua');
 				if(FileSystem.exists(luaToLoad))
 				{
 					luaArray.push(new FunkinLua(luaToLoad));
@@ -1099,7 +1114,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				luaToLoad = Paths.getPreloadPath('custom_events/' + event + '.lua');
+				luaToLoad = Sys.getCwd() + Paths.getPreloadPath('custom_events/' + event + '.lua');
 				if(FileSystem.exists(luaToLoad))
 				{
 					luaArray.push(new FunkinLua(luaToLoad));
@@ -1200,12 +1215,6 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
-		#if mobile
-		addMobileControls();
-    	MusicBeatState.mobilec.visible = false;
-    	if (ClientPrefs.hitboxmode == 'New' && !ClientPrefs.hitboxhint) MusicBeatState.mobilec.alpha = 0.000001;
-    	#end
-
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
 		// UI_camera.zoom = 1;
@@ -1237,7 +1246,7 @@ class PlayState extends MusicBeatState
 		// SONG SPECIFIC SCRIPTS
 		#if LUA_ALLOWED
 		var filesPushed:Array<String> = [];
-		var foldersToCheck:Array<String> = [Paths.getPreloadPath('data/' + Paths.formatToSongPath(SONG.song) + '/')];
+		var foldersToCheck:Array<String> = [Sys.getCwd() + Paths.getPreloadPath('data/' + Paths.formatToSongPath(SONG.song) + '/')];
 
 		#if MODS_ALLOWED
 		foldersToCheck.insert(0, Paths.mods('data/' + Paths.formatToSongPath(SONG.song) + '/'));
@@ -1424,7 +1433,7 @@ class PlayState extends MusicBeatState
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Paths.getPreloadPath('shaders/')];
+		var foldersToCheck:Array<String> = [Sys.getCwd() + Paths.getPreloadPath('shaders/')];
 
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
 
@@ -1562,7 +1571,7 @@ class PlayState extends MusicBeatState
 			luaFile = Paths.modFolders(luaFile);
 			doPush = true;
 		} else {
-			luaFile = Paths.getPreloadPath(luaFile);
+			luaFile = Sys.getCwd() + Paths.getPreloadPath(luaFile);
 			if(FileSystem.exists(luaFile)) {
 				doPush = true;
 			}
@@ -2120,10 +2129,6 @@ class PlayState extends MusicBeatState
 		var ret:Dynamic = callOnLuas('onStartCountdown', [], false);
 		if(ret != FunkinLua.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
-			#if mobile
-			MusicBeatState.mobilec.visible = true;
-    		if (MusicBeatState.checkHitbox != true) MusicBeatState.mobilec.alpha = ClientPrefs.VirtualPadAlpha;
-    		#end
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
@@ -2136,7 +2141,12 @@ class PlayState extends MusicBeatState
 				//if(ClientPrefs.middleScroll) opponentStrums.members[i].visible = false;
 			}
 
+			#if mobile
+			startedCountdown = MusicBeatState.mobilec.visible = true;
+			if (checkHitbox != true) MusicBeatState.mobilec.alpha = 1;
+			#else
 			startedCountdown = true;
+			#end
 			Conductor.songPosition = -Conductor.crochet * 5;
 			setOnLuas('startedCountdown', true);
 			callOnLuas('onCountdownStarted', []);
@@ -2476,7 +2486,7 @@ class PlayState extends MusicBeatState
 		var songName:String = Paths.formatToSongPath(SONG.song);
 		var file:String = Paths.json(songName + '/events');
 		#if MODS_ALLOWED
-		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(file)) {
+		if (FileSystem.exists(Paths.modsJson(songName + '/events')) || FileSystem.exists(Sys.getCwd() + file)) {
 		#else
 		if (OpenFlAssets.exists(file)) {
 		#end
@@ -3369,6 +3379,20 @@ class PlayState extends MusicBeatState
 		DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconP2.getCharacter());
 		#end
 	}
+	
+	function openOptionsMenu()
+	{
+		persistentUpdate = false;
+		MoveOption = true;
+		PlayState.deathCounter = 0;
+	    PlayState.seenCutscene = false;
+		MusicBeatState.switchState(new options.OptionsState());
+		FlxG.sound.playMusic(Paths.music('freakyMenu'));
+
+		#if desktop
+		DiscordClient.changePresence("Options Menu", null, null, true);
+		#end
+	}
 
 	function openChartEditor()
 	{
@@ -3936,8 +3960,11 @@ class PlayState extends MusicBeatState
 		}
 
 		#if mobile
-        MusicBeatState.mobilec.visible = false;
-        #end
+		MusicBeatState.mobilec.visible = false;
+		if (ClientPrefs.hitboxmode == 'New' && !ClientPrefs.hitboxhint) {
+		MusicBeatState.mobilec.alpha = 0.00001;
+		}
+		#end
 		timeBarBG.visible = false;
 		timeBar.visible = false;
 		timeTxt.visible = false;

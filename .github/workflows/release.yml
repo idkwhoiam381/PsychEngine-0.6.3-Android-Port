@@ -72,8 +72,8 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
-          automatic_release_tag: "v1.0"
-          title: "First Release"
+          automatic_release_tag: "v1.1"
+          title: "Bugfix Update"
           files: |
             /home/runner/*.apk
             /home/runner/*.zip
