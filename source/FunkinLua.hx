@@ -1033,33 +1033,33 @@ class FunkinLua {
 			// I'm kidding
 		   #if android // Extend for check control for android,you can try to extend other key at same way but I'm so lazy. --Write by NF|beihu(北狐丶逐梦)
            if (MusicBeatState.mobilec.newhbox != null){ //check for android control and dont check for keyboard
-			    if (variable == 'keys.justPressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.justPressed){
+			    if (variable == 'keys.justPressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed){
     			    return FunkinLua.getVarInArray(myClass, variable);
                 }
-                else if (variable == 'keys.pressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.pressed){
+                else if (variable == 'keys.pressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed){
                     return FunkinLua.getVarInArray(myClass, variable);
                 }
-                else if (variable == 'keys.justReleased.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.justReleased){
+                else if (variable == 'keys.justReleased.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased){
                     return FunkinLua.getVarInArray(myClass, variable);
                 }
                 
-                if (variable == 'keys.justPressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.justPressed){
+                if (variable == 'keys.justPressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed){
     			    return FunkinLua.getVarInArray(myClass, variable);
                 }
-                else if (variable == 'keys.pressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.pressed){
+                else if (variable == 'keys.pressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed){
                     return FunkinLua.getVarInArray(myClass, variable);
                 }
-                else if (variable == 'keys.justReleased.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.justReleased){
+                else if (variable == 'keys.justReleased.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased){
                     return FunkinLua.getVarInArray(myClass, variable);
                 }
                 
-                if (variable == 'keys.justPressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.justPressed){
+                if (variable == 'keys.justPressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed){
     			    return FunkinLua.getVarInArray(myClass, variable);
                 }
-                else if (variable == 'keys.pressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.pressed){
+                else if (variable == 'keys.pressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed){
                     return FunkinLua.getVarInArray(myClass, variable);
                 }
-                else if (variable == 'keys.justReleased.Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.justReleased){
+                else if (variable == 'keys.justReleased.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased){
                     return FunkinLua.getVarInArray(myClass, variable);
                 }
                 
@@ -1458,13 +1458,13 @@ class FunkinLua {
 		{
 		    #if android // Extend for check control for android
             if (MusicBeatState.mobilec.newhbox != null){ //check for android control and dont check for keyboard
-			    if (name == 'SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.justPressed){
+			    if (name == 'SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed){
     			    return true;
                 }
-                if (name == 'SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.justPressed){
+                if (name == 'SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed){
     			    return true;
                 }
-                if (name == 'Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.justPressed){
+                if (name == 'Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed){
     			    return true;
                 }
                 if (name == 'E' && MusicBeatState.mobilec.newhbox.buttonExtra4.justPressed){
@@ -1487,13 +1487,13 @@ class FunkinLua {
 		{
 		     #if android // Extend for check control for android
            if (MusicBeatState.mobilec.newhbox != null){ //check for android control and dont check for keyboard
-			    if (name == 'SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.pressed){
+			    if (name == 'SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed){
     			    return true;
                 }
-                if (name == 'SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.pressed){
+                if (name == 'SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed){
     			    return true;
                 }
-                if (name == 'Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.pressed){
+                if (name == 'Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed){
     			    return true;
                 }
                 if (name == 'E' && MusicBeatState.mobilec.newhbox.buttonExtra4.pressed){
@@ -1515,13 +1515,13 @@ class FunkinLua {
 		{
 		    #if android // Extend for check control for android
            if (MusicBeatState.mobilec.newhbox != null){ //check for android control and dont check for keyboard
-			    if (name == 'SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.justReleased){
+			    if (name == 'SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased){
     			    return true;
                 }
-                if (name == 'SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.justReleased){
+                if (name == 'SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased){
     			    return true;
                 }
-                if (name == 'Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.justReleased){
+                if (name == 'Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased){
     			    return true;
                 }
                 if (name == 'E' && MusicBeatState.mobilec.newhbox.buttonExtra4.justReleased){
@@ -2630,7 +2630,7 @@ class FunkinLua {
 			if(!PlayState.instance.modchartSaves.exists(name))
 			{
 				var save:FlxSave = new FlxSave();
-				save.bind(name , folder);
+				save.bind(name, folder);
 				PlayState.instance.modchartSaves.set(name, save);
 				return;
 			}
@@ -2961,41 +2961,41 @@ class FunkinLua {
 		#if android //Extend for check control for android,you can try to extend other key at same way but I'm so lazy. --Write by NF|beihu(北狐丶逐梦)
 	        var pressCheck:Dynamic;
 	        if (MusicBeatState.mobilec.newhbox != null){ //check for android control and dont check for keyboard
-			    if (variable == 'keys.justPressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.justPressed){
+			    if (variable == 'keys.justPressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed){
     			    pressCheck = true;
                     return pressCheck;
                 }
-                else if (variable == 'keys.pressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.pressed){
+                else if (variable == 'keys.pressed.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed){
                     pressCheck = true;
                     return pressCheck;
                 }
-                else if (variable == 'keys.justReleased.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra2.justReleased){
+                else if (variable == 'keys.justReleased.SPACE' && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased){
                     pressCheck = true;
                     return pressCheck;
                 }
                 
-                if (variable == 'keys.justPressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.justPressed){
+                if (variable == 'keys.justPressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed){
     			    pressCheck = true;
                     return pressCheck;
                 }
-                else if (variable == 'keys.pressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.pressed){
+                else if (variable == 'keys.pressed.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed){
                     pressCheck = true;
                     return pressCheck;
                 }
-                else if (variable == 'keys.justReleased.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra1.justReleased){
+                else if (variable == 'keys.justReleased.SHIFT' && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased){
                     pressCheck = true;
                     return pressCheck;
                 }
                 
-                if (variable == 'keys.justPressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.justPressed){
+                if (variable == 'keys.justPressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed){
     			    pressCheck = true;
                     return pressCheck;
                 }
-                else if (variable == 'keys.pressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.pressed){
+                else if (variable == 'keys.pressed.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed){
                     pressCheck = true;
                     return pressCheck;
                 }
-                else if (variable == 'keys.justReleased.Q' && MusicBeatState.mobilec.newhbox.buttonExtra4xtra3.justReleased){
+                else if (variable == 'keys.justReleased.Q' && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased){
                     pressCheck = true;
                     return pressCheck;
                 }
