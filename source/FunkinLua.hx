@@ -2908,9 +2908,6 @@ class FunkinLua {
 			return list;
 		});
 		
-		#if android AndroidFunctions.implement(this); #end
-		#if mobile MobileFunctions.implement(this); #end
-
 		call('onCreate', []);
 		#end
 	}
