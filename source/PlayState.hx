@@ -3076,11 +3076,6 @@ class PlayState extends MusicBeatState
 			botplaySine += 180 * elapsed;
 			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
 		}
-		
-		if (generatedMusic && startedCountdown && !endingSong && isCameraOnForcedPos)
-		{
-		    isCameraOnForcedPos = false;
-		}
 
 		if ((controls.PAUSE #if android || FlxG.android.justReleased.BACK #end) && startedCountdown && canPause)
 		{
