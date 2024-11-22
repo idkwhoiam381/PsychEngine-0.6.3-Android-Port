@@ -1,5 +1,7 @@
 name: Android
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -33,8 +35,6 @@ jobs:
           haxelib setup ~/haxelib
           haxelib install hmm --quiet
           haxelib run hmm install --quiet
-      - name: Create Version Tag
-        run: echo "${{github.run_id}}" > VERSION
 
       - name: Setup Lime
         run: |
@@ -47,7 +47,7 @@ jobs:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
       - name: Compile
-        run: haxelib run lime build android -D officialBuild -final
+        run: haxelib run lime build android -D debug_build -final -release -armv7
 
       - name: Upload Artifact
         uses: actions/upload-artifact@main
