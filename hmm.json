@@ -45,8 +45,9 @@
     },
     {
       "name": "hxCodec",
-      "type": "haxelib",
-      "version": "2.5.1"
+      "type": "git",
+      "ref": "main",
+      "url": "https://github.com/Prohack101010/hxCodec-2.6.0-with-MP4Handler"
     },
     {
       "name": "hxcpp",
