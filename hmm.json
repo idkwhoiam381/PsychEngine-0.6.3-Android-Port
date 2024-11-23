@@ -65,6 +65,11 @@
       "name": "openfl",
       "type": "haxelib",
       "version": "9.2.2"
+    },
+    {
+      "name": "hxcpp-debug-server",
+      "type": "haxelib",
+      "version": null
     }
   ]
 }
