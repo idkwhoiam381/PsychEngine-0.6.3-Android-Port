@@ -47,6 +47,7 @@ class MobileOptionsSubState extends BaseOptionsMenu
 	
 	public function new()
 	{
+	    storageTypes = storageTypes.concat(externalPaths);
 		title = 'Mobile Options';
 		rpcTitle = 'Mobile Options Menu'; //hi, you can ask what is that, i will answer it's all what you needed lol.
 		
@@ -147,6 +148,17 @@ class MobileOptionsSubState extends BaseOptionsMenu
 		File.saveContent(lime.system.System.applicationStorageDirectory + 'storagetype.txt', ClientPrefs.storageType);
 	
 		var lastStoragePath:String = StorageType.fromStrForce(lastStorageType) + '/';
+		
+		if (lastStorageType != 'EXTERNAL') //pls work
+		{
+    		try
+    		{
+    		    if (lastStorageType != 'EXTERNAL') //Double Check
+    			    Sys.command('rm', ['-rf', lastStoragePath]);
+    		}
+    		catch (e:haxe.Exception)
+    			trace('Failed to remove last directory. (${e.message})');
+		}
 	}
 	#end
 
