@@ -149,11 +149,11 @@ class MobileOptionsSubState extends BaseOptionsMenu
 	
 		var lastStoragePath:String = StorageType.fromStrForce(lastStorageType) + '/';
 		
-		if (lastStorageType != 'EXTERNAL') //pls work
+		if (lastStorageType == 'EXTERNAL_DATA' || lastStorageType == 'EXTERNAL_OBB' || lastStorageType == 'EXTERNAL_MEDIA')
 		{
     		try
     		{
-    		    if (lastStorageType != 'EXTERNAL') //Double Check
+    		    if (lastStorageType == 'EXTERNAL_DATA' || lastStorageType == 'EXTERNAL_OBB' || lastStorageType == 'EXTERNAL_MEDIA') //Double Check
     			    Sys.command('rm', ['-rf', lastStoragePath]);
     		}
     		catch (e:haxe.Exception)
