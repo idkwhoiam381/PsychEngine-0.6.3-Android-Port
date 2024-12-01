@@ -24,7 +24,7 @@ class FPSCounter extends TextField
 	/**
 		The current frame rate, expressed using frames-per-second
 	**/
-	public static var currentFPS(default, null):Int;
+	public var currentFPS(default, null):Int;
 
 	/**
 		The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
