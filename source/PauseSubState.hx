@@ -21,7 +21,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	var menuItems:Array<String> = [];
 	#if debug_build
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Skip Time', 'End Song', 'Toggle Botplay', 'Toggle Practice Mode', 'Options', 'Change Difficulty' #if mobile, 'Chart Editor' #end, 'Exit to menu', 'Exit to main menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Skip Time', 'End Song', 'Toggle Botplay', 'Toggle Practice Mode', 'Options', 'Change Difficulty' #if mobile, 'Chart Editor' #end, 'Exit to menu'];
 	#else
 	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', #if mobile, 'Chart Editor' #end, 'Exit to menu'];
 	#end
@@ -141,10 +141,14 @@ class PauseSubState extends MusicBeatSubstate
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 		
 		#if mobile
+		#if debug_build
+		addVirtualPad(FULL, A);
+		#else
 		if (PlayState.chartingMode)
 		    addVirtualPad(FULL, A);
 		else
 		    addVirtualPad(UP_DOWN, A);
+		#end
 		addVirtualPadCamera();
 		#end
 	}
