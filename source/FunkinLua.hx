@@ -1573,16 +1573,6 @@ class FunkinLua {
 
 		Lua_helper.add_callback(lua, "keyJustPressed", function(name:String) {
 			var key:Bool = false;
-			#if mobile
-			if (name == extra1)
-			    key = PlayState.instance.getControl('EXTRA1_P');
-		    if (name == extra2)
-		        key = PlayState.instance.getControl('EXTRA2_P');
-		    if (name == extra3)
-		        key = PlayState.instance.getControl('EXTRA3_P');
-		    if (name == extra4)
-		        key = PlayState.instance.getControl('EXTRA4_P');
-			#end
 			switch(name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_P');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN_P');
@@ -1600,20 +1590,20 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP_P');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_P');
 			}
+			#if mobile
+			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
+			    key = PlayState.instance.getControl('EXTRA1_P');
+		    if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA2_P');
+		    if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA3_P');
+		    if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA4_P');
+			#end
 			return key;
 		});
 		Lua_helper.add_callback(lua, "keyPressed", function(name:String) {
 			var key:Bool = false;
-			#if mobile
-			if (name == extra1)
-			    key = PlayState.instance.getControl('EXTRA1');
-		    if (name == extra2)
-		        key = PlayState.instance.getControl('EXTRA2');
-		    if (name == extra3)
-		        key = PlayState.instance.getControl('EXTRA3');
-		    if (name == extra4)
-		        key = PlayState.instance.getControl('EXTRA4');
-			#end
 			switch(name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN');
@@ -1627,20 +1617,20 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT');
 			}
+			#if mobile
+			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
+			    key = PlayState.instance.getControl('EXTRA1');
+		    if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA2');
+		    if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA3');
+		    if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA4');
+			#end
 			return key;
 		});
 		Lua_helper.add_callback(lua, "keyReleased", function(name:String) {
 			var key:Bool = false;
-			#if mobile
-			if (name == extra1)
-			    key = PlayState.instance.getControl('EXTRA1_R');
-		    if (name == extra2)
-		        key = PlayState.instance.getControl('EXTRA2_R');
-		    if (name == extra3)
-		        key = PlayState.instance.getControl('EXTRA3_R');
-		    if (name == extra4)
-		        key = PlayState.instance.getControl('EXTRA4_R');
-			#end
 			switch(name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_R');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN_R');
@@ -1654,6 +1644,16 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP_R');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_R');
 			}
+			#if mobile
+			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
+			    key = PlayState.instance.getControl('EXTRA1_R');
+		    if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA2_R');
+		    if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA3_R');
+		    if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
+		        key = PlayState.instance.getControl('EXTRA4_R');
+			#end
 			return key;
 		});
 		Lua_helper.add_callback(lua, "addCharacterToList", function(name:String, type:String) {
