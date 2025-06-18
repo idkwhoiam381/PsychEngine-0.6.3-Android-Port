@@ -158,7 +158,7 @@ class StorageUtil
 enum abstract StorageType(String) from String to String
 {
     final forcedPath = '/storage/emulated/0/';
-	final packageNameLocal = 'com.kraloyuncu.psychextended' #if debugBuild + '.debug' #end;
+	final packageNameLocal = 'com.kraloyuncu.psychengine063';
 	final fileLocalONLINE = 'PsychOnline';
 	final fileLocal = 'PsychEngine';
 	final fileLocalNF = 'NF Engine';

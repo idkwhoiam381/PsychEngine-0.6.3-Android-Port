@@ -27,7 +27,7 @@ on:
 
 env:
   HAXE_VERSION: 4.2.5
-  PROJECT_NAME: PsychExtended
+  PROJECT_NAME: PsychEngine
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v1.2.0
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
