@@ -221,14 +221,22 @@ class Paths
 	inline static public function voices(song:String):Any
 	{
 		var songKey:String = '${formatToSongPath(song)}/Voices';
+		#if !NEW_PSYCH063
 		var voices = returnSound('songs', songKey);
+		#else
+		var voices = returnSound(null, songKey, 'songs');
+		#end
 		return voices;
 	}
 
 	inline static public function inst(song:String):Any
 	{
 		var songKey:String = '${formatToSongPath(song)}/Inst';
+		#if !NEW_PSYCH063
 		var inst = returnSound('songs', songKey);
+		#else
+		var inst = returnSound(null, songKey, 'songs');
+		#end
 		return inst;
 	}
 
@@ -291,22 +299,29 @@ class Paths
 		}
 		return false;
 	}
-
+	
 	inline static public function getSparrowAtlas(key:String, ?library:String):FlxAtlasFrames
 	{
 		#if MODS_ALLOWED
 		var imageLoaded:FlxGraphic = returnGraphic(key);
 		var xmlExists:Bool = false;
-		if(FileSystem.exists(modsXml(key))) {
+
+		var xml:String = modsXml(key);
+		if(FileSystem.exists(xml)) {
 			xmlExists = true;
 		}
 
-		return FlxAtlasFrames.fromSparrow((imageLoaded != null ? imageLoaded : image(key, library)), (xmlExists ? File.getContent(modsXml(key)) : file('images/$key.xml', library)));
+		var getXml = file('images/$key.xml', library);
+		if (xmlExists)
+			getXml = File.getContent(xml)
+		else if(!Paths.fileExists('images/$key.xml', TEXT, false, library))
+			getXml = file('$key.xml', library);
+
+		return FlxAtlasFrames.fromSparrow((imageLoaded != null ? imageLoaded : image(key, library)), getXml);
 		#else
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 		#end
 	}
-
 
 	inline static public function getPackerAtlas(key:String, ?library:String)
 	{
@@ -349,6 +364,7 @@ class Paths
 		#end
 
 		var path = getPath('images/$key.png', IMAGE, library);
+		var normalPath = getPath('$key.png', IMAGE, library);
 		//trace(path);
 		if (OpenFlAssets.exists(path, IMAGE)) {
 			if(!currentTrackedAssets.exists(path)) {
@@ -359,12 +375,52 @@ class Paths
 			localTrackedAssets.push(path);
 			return currentTrackedAssets.get(path);
 		}
+		else if (OpenFlAssets.exists(normalPath, IMAGE)) {
+			if(!currentTrackedAssets.exists(normalPath)) {
+				var newGraphic:FlxGraphic = FlxG.bitmap.add(normalPath, false, normalPath);
+				newGraphic.persist = true;
+				currentTrackedAssets.set(normalPath, newGraphic);
+			}
+			localTrackedAssets.push(normalPath);
+			return currentTrackedAssets.get(normalPath);
+		}
 		trace('oh no its returning null NOOOO');
 		return null;
 	}
 
 	public static var currentTrackedSounds:Map<String, Sound> = [];
-	public static function returnSound(path:String, key:String, ?library:String) {
+	public static function returnSound(path:Null<String>, key:String, ?library:String) {
+		#if NEW_PSYCH063
+		#if MODS_ALLOWED
+		var modLibPath:String = '';
+		if (library != null) modLibPath = '$library/';
+		if (path != null) modLibPath += '$path';
+
+		var file:String = modsSounds(modLibPath, key);
+		if(FileSystem.exists(file)) {
+			if(!currentTrackedSounds.exists(file))
+				currentTrackedSounds.set(file, Sound.fromFile(file));
+			localTrackedAssets.push(file);
+			return currentTrackedSounds.get(file);
+		}
+		#end
+
+		// I hate this so god damn much
+		var gottenPath:String = '$key.$SOUND_EXT';
+		if(path != null) gottenPath = '$path/$gottenPath';
+		gottenPath = getPath(gottenPath, SOUND, library);
+		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
+		// trace(gottenPath);
+		if(!currentTrackedSounds.exists(gottenPath))
+		{
+			var retKey:String = (path != null) ? '$path/$key' : key;
+			retKey = ((path == 'songs') ? 'songs:' : '') + getPath('$retKey.$SOUND_EXT', SOUND, library);
+			if(OpenFlAssets.exists(retKey, SOUND))
+				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(retKey));
+		}
+		localTrackedAssets.push(gottenPath);
+		return currentTrackedSounds.get(gottenPath);
+		#else
 		#if MODS_ALLOWED
 		var file:String = modsSounds(path, key);
 		if(FileSystem.exists(file)) {
@@ -392,6 +448,7 @@ class Paths
 		#end
 		localTrackedAssets.push(gottenPath);
 		return currentTrackedSounds.get(gottenPath);
+		#end
 	}
 
 	#if MODS_ALLOWED
@@ -509,4 +566,25 @@ class Paths
 		return list;
 	}
 	#end
+	
+	public static function readDirectory(directory:String):Array<String>
+	{
+		#if MODS_ALLOWED
+		return FileSystem.readDirectory(directory);
+		#else
+		var dirs:Array<String> = [];
+		for(dir in Assets.list().filter(folder -> folder.startsWith(directory)))
+		{
+			@:privateAccess
+			for(library in lime.utils.Assets.libraries.keys())
+			{
+				if(library != 'default' && Assets.exists('$library:$dir') && (!dirs.contains('$library:$dir') || !dirs.contains(dir)))
+					dirs.push('$library:$dir');
+				else if(Assets.exists(dir) && !dirs.contains(dir))
+					dirs.push(dir);
+			}
+		}
+		return dirs;
+		#end
+	}
 }

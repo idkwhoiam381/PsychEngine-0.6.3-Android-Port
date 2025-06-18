@@ -28,7 +28,6 @@ import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
 import flixel.system.ui.FlxSoundTray;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -162,6 +161,9 @@ class TitleState extends MusicBeatState
 		#end
 
 		Highscore.load();
+		#if TOUCH_CONTROLS
+		MobileData.init();
+		#end
 
 		// IGNORE THIS!!!
 		titleJSON = Json.parse(Paths.getTextFromFile('images/gfDanceTitle.json'));

@@ -1,6 +1,5 @@
 package mobile.backend;
 
-import flixel.FlxG;
 import flixel.system.scaleModes.BaseScaleMode;
 
 /**
@@ -10,6 +9,7 @@ import flixel.system.scaleModes.BaseScaleMode;
 class MobileScaleMode extends BaseScaleMode
 {
     public static var allowWideScreen(default, set):Bool = true;
+    public static var MobileScreenEvent(default, set):Bool = false; // I don't have a Funkin Horror source code right now but I can add a simple support
 
     override function updateGameSize(Width:Int, Height:Int):Void
 	{
@@ -27,12 +27,18 @@ class MobileScaleMode extends BaseScaleMode
             if (scaleY)
             {
                 gameSize.x = Width;
-                gameSize.y = Math.floor(gameSize.x / ratio);
+                if(!MobileScreenEvent)
+                    gameSize.y = Math.floor(gameSize.x / ratio);
+                else
+                    gameSize.y = Math.floor(gameSize.x);
             }
             else
             {
                 gameSize.y = Height;
-                gameSize.x = Math.floor(gameSize.y * ratio);
+                if(!MobileScreenEvent)
+                    gameSize.x = Math.floor(gameSize.y * ratio);
+                else
+                    gameSize.x = Math.floor(gameSize.y);
             }
         }
 	}
@@ -49,6 +55,12 @@ class MobileScaleMode extends BaseScaleMode
     private static function set_allowWideScreen(value:Bool):Bool
     {
         allowWideScreen = value;
+        FlxG.scaleMode = new MobileScaleMode();
+        return value;
+    }
+    private static function set_MobileScreenEvent(value:Bool):Bool
+    {
+        MobileScreenEvent = value;
         FlxG.scaleMode = new MobileScaleMode();
         return value;
     }

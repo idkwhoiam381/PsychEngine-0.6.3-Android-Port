@@ -14,7 +14,7 @@ class ClientPrefs {
     public static var hitboxtype:String = 'Gradient';
     public static var storageType:String = 'EXTERNAL_DATA';
     public static var hitboxhint:Bool = false;
-    public static var VirtualPadAlpha:Float = 0.75;
+    public static var mobilePadAlpha:Float = 0.6;
     public static var hitboxalpha:Float = 0.7;
     public static var extraKeyReturn1:String = 'SHIFT';
     public static var extraKeyReturn2:String = 'SPACE';
@@ -115,7 +115,7 @@ class ClientPrefs {
         FlxG.save.data.hitboxmode = hitboxmode;
         FlxG.save.data.hitboxtype = hitboxtype;
         FlxG.save.data.storageType = storageType;
-        FlxG.save.data.VirtualPadAlpha = VirtualPadAlpha;
+        FlxG.save.data.mobilePadAlpha = mobilePadAlpha;
         FlxG.save.data.hitboxalpha = hitboxalpha;
         FlxG.save.data.extraKeyReturn1 = extraKeyReturn1;
         FlxG.save.data.extraKeyReturn2 = extraKeyReturn2;
@@ -183,8 +183,8 @@ class ClientPrefs {
         	hitboxtype = FlxG.save.data.hitboxtype;
         if(FlxG.save.data.storageType != null)
         	storageType = FlxG.save.data.storageType;
-        if(FlxG.save.data.VirtualPadAlpha != null)
-        	VirtualPadAlpha = FlxG.save.data.VirtualPadAlpha;
+        if(FlxG.save.data.mobilePadAlpha != null)
+        	mobilePadAlpha = FlxG.save.data.mobilePadAlpha;
         if(FlxG.save.data.hitboxalpha != null)
         	hitboxalpha = FlxG.save.data.hitboxalpha;
         if(FlxG.save.data.extraKeyReturn1 != null)

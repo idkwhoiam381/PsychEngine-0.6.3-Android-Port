@@ -1,6 +1,6 @@
 package editors;
 
-#if desktop
+#if DISCORD_ALLOWED
 import Discord.DiscordClient;
 #end
 import animateatlas.AtlasFrameMaker;
@@ -142,14 +142,21 @@ class CharacterEditorState extends MusicBeatState
 		camFollow.screenCenter();
 		add(camFollow);
 
-		var tipTextArray:Array<String> = "E/Q - Camera Zoom In/Out
-		\nR - Reset Camera Zoom
-		\nJKLI - Move Camera
-		\nW/S - Previous/Next Animation
+		final buttonEQ:String = #if TOUCH_CONTROLS 'X/Y' #else 'E/Q' #end;
+		final buttonR:String = #if TOUCH_CONTROLS 'Z' #else 'R' #end;
+		final buttonWS:String = #if TOUCH_CONTROLS 'V/D' #else 'W/S' #end;
+		final buttonT:String = #if TOUCH_CONTROLS 'A' #else 'T' #end;
+		final buttonShift:String = #if TOUCH_CONTROLS 'Shift' #else 'C' #end;
+		final buttonJKLI:String = #if TOUCH_CONTROLS 'Hold G and Arrow Keys' #else 'JKLI' #end;
+
+		var tipTextArray:Array<String> = '$buttonEQ - Camera Zoom In/Out
+		\n$buttonR - Reset Camera Zoom
+		\n$buttonJKLI - Move Camera
+		\n$buttonWS - Previous/Next Animation
 		\nSpace - Play Animation
 		\nArrow Keys - Move Character Offset
-		\nT - Reset Current Offset
-		\nHold Shift to Move 10x faster\n".split('\n');
+		\n$buttonT - Reset Current Offset
+		\nHold $buttonShift to Move 10x faster\n'.split('\n');
 
 		for (i in 0...tipTextArray.length-1)
 		{
@@ -201,11 +208,10 @@ class CharacterEditorState extends MusicBeatState
 		FlxG.mouse.visible = true;
 		reloadCharacterOptions();
 
-		#if mobile
-		addVirtualPad(FULL, FULL);
-		addVirtualPadCamera();
+		#if TOUCH_CONTROLS
+		addMobilePad("FULL", "CHARACTER_EDITOR");
+		addMobilePadCamera();
 		#end
-
 		super.create();
 	}
 
@@ -519,7 +525,6 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.name = "Character";
 
 		imageInputText = new FlxUIInputText(15, 30, 200, 'characters/BOYFRIEND', 8);
-		imageInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		var reloadImage:FlxButton = new FlxButton(imageInputText.x + 210, imageInputText.y - 3, "Reload Image", function()
 		{
 			char.imageFile = imageInputText.text;
@@ -541,7 +546,6 @@ class CharacterEditorState extends MusicBeatState
 			});
 
 		healthIconInputText = new FlxUIInputText(15, imageInputText.y + 35, 75, leHealthIcon.getCharacter(), 8);
-		healthIconInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 
 		singDurationStepper = new FlxUINumericStepper(15, healthIconInputText.y + 45, 0.1, 4, 0, 999, 1);
 
@@ -621,11 +625,8 @@ class CharacterEditorState extends MusicBeatState
 		tab_group.name = "Animations";
 
 		animationInputText = new FlxUIInputText(15, 85, 80, '', 8);
-		animationInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		animationNameInputText = new FlxUIInputText(animationInputText.x, animationInputText.y + 35, 150, '', 8);
-		animationNameInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		animationIndicesInputText = new FlxUIInputText(animationNameInputText.x, animationNameInputText.y + 40, 250, '', 8);
-		animationIndicesInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
 		animationNameFramerate = new FlxUINumericStepper(animationInputText.x + 170, animationInputText.y, 1, 24, 0, 240, 0);
 		animationLoopCheckBox = new FlxUICheckBox(animationNameInputText.x + 170, animationNameInputText.y - 1, null, null, "Should it Loop?", 100);
 
@@ -1061,7 +1062,7 @@ class CharacterEditorState extends MusicBeatState
 		for (i in 0...directories.length) {
 			var directory:String = directories[i];
 			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
+				for (file in Paths.readDirectory(directory)) {
 					var path = haxe.io.Path.join([directory, file]);
 					if (!sys.FileSystem.isDirectory(path) && file.endsWith('.json')) {
 						var charToCheck:String = file.substr(0, file.length - 5);
@@ -1089,7 +1090,7 @@ class CharacterEditorState extends MusicBeatState
 	}
 
 	function updatePresence() {
-		#if desktop
+		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Character Editor", "Character: " + daAnim, leHealthIcon.getCharacter());
 		#end
@@ -1124,7 +1125,7 @@ class CharacterEditorState extends MusicBeatState
 		FlxG.sound.volumeUpKeys = TitleState.volumeUpKeys;
 
 		if(!charDropDown.dropPanel.visible) {
-			if (FlxG.keys.justPressed.ESCAPE #if android || FlxG.android.justReleased.BACK #end) {
+			if (#if TOUCH_CONTROLS mobilePad.buttonB.justPressed || #end FlxG.keys.justPressed.ESCAPE) {
 				if(goToPlayState) {
 					MusicBeatState.switchState(new PlayState());
 				} else {
@@ -1135,43 +1136,43 @@ class CharacterEditorState extends MusicBeatState
 				return;
 			}
 
-			if (FlxG.keys.justPressed.R #if mobile || _virtualpad.buttonZ.justPressed #end) {
+			if (#if TOUCH_CONTROLS mobilePad.buttonZ.justPressed || #end FlxG.keys.justPressed.R) {
 				FlxG.camera.zoom = 1;
 			}
 
-			if (FlxG.keys.pressed.E #if mobile || _virtualpad.buttonX.pressed #end && FlxG.camera.zoom < 3) {
+			if (#if TOUCH_CONTROLS mobilePad.buttonX.pressed || #end FlxG.keys.pressed.E && FlxG.camera.zoom < 3) {
 				FlxG.camera.zoom += elapsed * FlxG.camera.zoom;
 				if(FlxG.camera.zoom > 3) FlxG.camera.zoom = 3;
 			}
-			if (FlxG.keys.pressed.Q #if mobile || _virtualpad.buttonY.pressed #end && FlxG.camera.zoom > 0.1) {
+			if (#if TOUCH_CONTROLS mobilePad.buttonY.pressed || #end FlxG.keys.pressed.Q && FlxG.camera.zoom > 0.1) {
 				FlxG.camera.zoom -= elapsed * FlxG.camera.zoom;
 				if(FlxG.camera.zoom < 0.1) FlxG.camera.zoom = 0.1;
 			}
 
-			if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
+			if (#if TOUCH_CONTROLS (mobilePad.buttonG.pressed && mobilePad.buttonLeft.pressed) || (mobilePad.buttonG.pressed && mobilePad.buttonDown.pressed) || (mobilePad.buttonG.pressed && mobilePad.buttonRight.pressed) || (mobilePad.buttonG.pressed && mobilePad.buttonUp.pressed) || #end FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 			{
 				var addToCam:Float = 500 * elapsed;
 				if (FlxG.keys.pressed.SHIFT)
 					addToCam *= 4;
 
-				if (FlxG.keys.pressed.I)
+				if (#if TOUCH_CONTROLS (mobilePad.buttonG.pressed && mobilePad.buttonUp.pressed) || #end FlxG.keys.pressed.I)
 					camFollow.y -= addToCam;
-				else if (FlxG.keys.pressed.K)
+				else if (#if TOUCH_CONTROLS (mobilePad.buttonG.pressed && mobilePad.buttonDown.pressed) || #end FlxG.keys.pressed.K)
 					camFollow.y += addToCam;
 
-				if (FlxG.keys.pressed.J)
+				if (#if TOUCH_CONTROLS (mobilePad.buttonG.pressed && mobilePad.buttonLeft.pressed) || #end FlxG.keys.pressed.J)
 					camFollow.x -= addToCam;
-				else if (FlxG.keys.pressed.L)
+				else if (#if TOUCH_CONTROLS (mobilePad.buttonG.pressed && mobilePad.buttonRight.pressed) || #end FlxG.keys.pressed.L)
 					camFollow.x += addToCam;
 			}
 
 			if(char.animationsArray.length > 0) {
-				if (FlxG.keys.justPressed.W #if mobile || _virtualpad.buttonV.justPressed #end)
+				if (#if TOUCH_CONTROLS (mobilePad.buttonV.justPressed && !mobilePad.buttonG.pressed) || #end FlxG.keys.justPressed.W)
 				{
 					curAnim -= 1;
 				}
 
-				if (FlxG.keys.justPressed.S #if mobile || _virtualpad.buttonD.justPressed #end)
+				if (#if TOUCH_CONTROLS (mobilePad.buttonD.justPressed && !mobilePad.buttonG.pressed ) || #end FlxG.keys.justPressed.S)
 				{
 					curAnim += 1;
 				}
@@ -1182,12 +1183,12 @@ class CharacterEditorState extends MusicBeatState
 				if (curAnim >= char.animationsArray.length)
 					curAnim = 0;
 
-				if (FlxG.keys.justPressed.S #if mobile || _virtualpad.buttonD.justPressed #end || FlxG.keys.justPressed.W #if mobile || _virtualpad.buttonV.justPressed #end || FlxG.keys.justPressed.SPACE)
+				if ((#if TOUCH_CONTROLS mobilePad.buttonD.justPressed || #end FlxG.keys.justPressed.S) || (#if TOUCH_CONTROLS mobilePad.buttonV.justPressed || #end FlxG.keys.justPressed.W) || FlxG.keys.justPressed.SPACE)
 				{
 					char.playAnim(char.animationsArray[curAnim].anim, true);
 					genBoyOffsets();
 				}
-				if (FlxG.keys.justPressed.T #if mobile || _virtualpad.buttonA.justPressed #end)
+				if (#if TOUCH_CONTROLS mobilePad.buttonA.justPressed || #end FlxG.keys.justPressed.T)
 				{
 					char.animationsArray[curAnim].offsets = [0, 0];
 
@@ -1197,15 +1198,17 @@ class CharacterEditorState extends MusicBeatState
 				}
 
 				var controlArray:Array<Bool> = [
-					FlxG.keys.justPressed.LEFT #if mobile || _virtualpad.buttonLeft.justPressed #end,
-					FlxG.keys.justPressed.RIGHT #if mobile || _virtualpad.buttonRight.justPressed #end,
-					FlxG.keys.justPressed.UP #if mobile || _virtualpad.buttonUp.justPressed #end,
-					FlxG.keys.justPressed.DOWN #if mobile || _virtualpad.buttonDown.justPressed #end
+					#if TOUCH_CONTROLS (mobilePad.buttonLeft.justPressed && !mobilePad.buttonG.pressed ) || #end FlxG.keys.justPressed.LEFT,
+					#if TOUCH_CONTROLS (mobilePad.buttonRight.justPressed && !mobilePad.buttonG.pressed) || #end FlxG.keys.justPressed.RIGHT,
+					#if TOUCH_CONTROLS (mobilePad.buttonUp.justPressed && !mobilePad.buttonG.pressed) || #end FlxG.keys.justPressed.UP,
+					#if TOUCH_CONTROLS (mobilePad.buttonDown.justPressed && !mobilePad.buttonG.pressed) || #end FlxG.keys.justPressed.DOWN
 				];
+
+
 
 				for (i in 0...controlArray.length) {
 					if(controlArray[i]) {
-						var holdShift = FlxG.keys.pressed.SHIFT #if mobile || _virtualpad.buttonB.pressed #end;
+						var holdShift = #if TOUCH_CONTROLS mobilePad.buttonC.pressed || #end FlxG.keys.pressed.SHIFT;
 						var multiplier = 1;
 						if (holdShift)
 							multiplier = 10;
@@ -1305,7 +1308,7 @@ class CharacterEditorState extends MusicBeatState
 		if (data.length > 0)
 		{
 			#if mobile
-			StorageUtil.saveContent(daAnim + ".json", data);
+			StorageUtil.saveContent('$daAnim.json', data);
 			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);

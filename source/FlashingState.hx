@@ -23,7 +23,7 @@ class FlashingState extends MusicBeatState
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-        #if mobile
+        #if TOUCH_CONTROLS
         warnText = new FlxText(0, 0, FlxG.width,
 			"Hey, watch out!\n
 			This Mod contains some flashing lights!\n
@@ -43,8 +43,8 @@ class FlashingState extends MusicBeatState
 		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
-		#if mobile
-        addVirtualPad(NONE, A_B);
+		#if TOUCH_CONTROLS
+        addMobilePad("NONE", "A_B");
         #end
 	}
 

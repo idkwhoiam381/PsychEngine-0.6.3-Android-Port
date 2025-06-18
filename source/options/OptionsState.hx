@@ -29,22 +29,22 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Note Colors', #if mobile 'Mobile Controls' #else 'Controls' #end, 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay' #if mobile , 'Mobile Options' #end];
+	var options:Array<String> = ['Note Colors', #if TOUCH_CONTROLS 'Mobile Controls' #else 'Controls' #end, 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay' #if (TOUCH_CONTROLS || mobile) , 'Mobile Options' #end];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
 
 	function openSelectedSubstate(label:String) {
-	    #if mobile
+		#if TOUCH_CONTROLS
 	    persistentUpdate = false;
-	    if (label != "Adjust Delay and Combo") removeVirtualPad();
+	    if (label != "Adjust Delay and Combo") removeMobilePad();
 	    #end
 		switch(label) {
 			case 'Note Colors':
 				openSubState(new options.NotesSubState());
 			case 'Controls':
 				openSubState(new options.ControlsSubState());
-			#if mobile
+			#if TOUCH_CONTROLS
 			case 'Mobile Controls':
     			openSubState(new MobileControlSelectSubState());
     		#end
@@ -54,7 +54,7 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.VisualsUISubState());
 			case 'Gameplay':
 				openSubState(new options.GameplaySettingsSubState());
-			#if mobile
+			#if (TOUCH_CONTROLS || mobile)
 			case 'Mobile Options':
 			    openSubState(new MobileOptionsSubState());
 			#end
@@ -104,8 +104,8 @@ class OptionsState extends MusicBeatState
 		tipText.scrollFactor.set();
 		add(tipText);
 		
-		#if mobile
-		addVirtualPad(UP_DOWN, A_B_E);
+		#if TOUCH_CONTROLS
+		addMobilePad("UP_DOWN", "A_B_E");
 		#end
 
 		super.create();
@@ -114,9 +114,9 @@ class OptionsState extends MusicBeatState
 	override function closeSubState() {
 		super.closeSubState();
 		ClientPrefs.saveSettings();
-		#if mobile
-		removeVirtualPad();
-		addVirtualPad(UP_DOWN, A_B_E);
+		#if TOUCH_CONTROLS
+		removeMobilePad();
+		addMobilePad("UP_DOWN", "A_B_E");
 		persistentUpdate = true;
 		#end
 	}
@@ -140,9 +140,9 @@ class OptionsState extends MusicBeatState
 			openSelectedSubstate(options[curSelected]);
 		}
 		
-		#if mobile
-		if (_virtualpad.buttonE.justPressed) {
-			removeVirtualPad();
+		#if TOUCH_CONTROLS
+		if (mobilePad.buttonE.justPressed) {
+			removeMobilePad();
 			persistentUpdate = false;
 			openSubState(new MobileExtraControl());
 		}

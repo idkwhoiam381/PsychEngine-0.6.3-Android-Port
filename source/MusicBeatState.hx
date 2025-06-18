@@ -14,12 +14,8 @@ import flixel.util.FlxGradient;
 import flixel.FlxState;
 import flixel.FlxCamera;
 import flixel.FlxBasic;
-
-#if mobile
 import flixel.input.actions.FlxActionInput;
-import mobile.flixel.FlxVirtualPad;
 import flixel.util.FlxDestroyUtil;
-#end
 
 class MusicBeatState extends FlxUIState
 {
@@ -38,59 +34,64 @@ class MusicBeatState extends FlxUIState
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 		
-	#if mobile
+	#if TOUCH_CONTROLS
 	public static var checkHitbox:Bool = false;
-	
-	var _virtualpad:FlxVirtualPad;
+	public var mobilePad:MobilePad;
 	public static var mobilec:MobileControls;
-	
+
 	var trackedinputsUI:Array<FlxActionInput> = [];
 	var trackedinputsNOTES:Array<FlxActionInput> = [];
 
-	public function addVirtualPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {		
-		if (_virtualpad != null)
-			removeVirtualPad();
+	public function addMobilePad(?DPad:String, ?Action:String) {
+		if (mobilePad != null)
+			removeMobilePad();
 
-		_virtualpad = new FlxVirtualPad(DPad, Action, 0.75, ClientPrefs.globalAntialiasing);
-		add(_virtualpad);
+		mobilePad = new MobilePad(DPad, Action);
+		add(mobilePad);
 
-		controls.setVirtualPadUI(_virtualpad, DPad, Action);
+		controls.setMobilePadUI(mobilePad, DPad, Action);
 		trackedinputsUI = controls.trackedInputsUI;
 		controls.trackedInputsUI = [];
+		mobilePad.alpha = ClientPrefs.mobilePadAlpha;
 	}
-	
-	public function removeVirtualPad() {
+
+	public function removeMobilePad() {
 		if (trackedinputsUI.length > 0)
 			controls.removeVirtualControlsInput(trackedinputsUI);
 
-		if (_virtualpad != null)
-			remove(_virtualpad);
+		if (mobilePad != null)
+			remove(mobilePad);
 	}
-	
+
+	/*
+	public function addVirtualPad(?DPad:String, ?Action:String)
+		return addMobilePad(DPad, Action);
+
+	public function removeVirtualPad()
+		return removeMobilePad();
+	*/
+
 	public function removeMobileControls() {
 		if (trackedinputsNOTES.length > 0)
 			controls.removeVirtualControlsInput(trackedinputsNOTES);
-			
+
 		if (mobilec != null)
 			remove(mobilec);
 	}
-	
-	public function addMobileControls() {
-		mobilec = new MobileControls();
 
-		switch (mobilec.mode)
+	public function addMobileControls(?mode:String) {
+		mobilec = new MobileControls(mode);
+
+		switch (MobileControls.mode)
 		{
-			case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
-				controls.setVirtualPadNOTES(mobilec.vpad, FULL, NONE);
+			case MOBILEPAD_RIGHT | MOBILEPAD_LEFT | MOBILEPAD_CUSTOM:
+				controls.setMobilePadNOTES(mobilec.vpad, "FULL", "NONE");
 				MusicBeatState.checkHitbox = false;
 			case DUO:
-				controls.setVirtualPadNOTES(mobilec.vpad, DUO, NONE);
+				controls.setMobilePadNOTES(mobilec.vpad, "DUO", "NONE");
 				MusicBeatState.checkHitbox = false;
 			case HITBOX:
-				if(ClientPrefs.hitboxmode != 'New')
-				    controls.setHitBox(mobilec.hbox);
-				else
-				    controls.setNewHitBox(mobilec.newhbox);
+				controls.setHitBox(mobilec.newhbox, mobilec.hbox);
 				MusicBeatState.checkHitbox = true;
 			default:
 		}
@@ -105,14 +106,19 @@ class MusicBeatState extends FlxUIState
 
 		add(mobilec);
 	}
-	
-    public function addVirtualPadCamera() {
+
+	public function addMobilePadCamera() {
 		var camcontrol = new flixel.FlxCamera();
 		camcontrol.bgColor.alpha = 0;
 		FlxG.cameras.add(camcontrol, false);
-		_virtualpad.cameras = [camcontrol];
+		mobilePad.cameras = [camcontrol];
 	}
-	
+
+	/*
+	public function addVirtualPadCamera()
+		return addMobilePadCamera();
+	*/
+
 	override function destroy() {
 		if (trackedinputsNOTES.length > 0)
 			controls.removeVirtualControlsInput(trackedinputsNOTES);
@@ -122,8 +128,8 @@ class MusicBeatState extends FlxUIState
 
 		super.destroy();
 
-		if (_virtualpad != null)
-			_virtualpad = FlxDestroyUtil.destroy(_virtualpad);
+		if (mobilePad != null)
+			mobilePad = FlxDestroyUtil.destroy(mobilePad);
 
 		if (mobilec != null)
 			mobilec = FlxDestroyUtil.destroy(mobilec);
@@ -216,31 +222,35 @@ class MusicBeatState extends FlxUIState
 		curStep = lastChange.stepTime + Math.floor(shit);
 	}
 
-	public static function switchState(nextState:FlxState) {
-		// Custom made Trans in
-		var curState:Dynamic = FlxG.state;
-		var leState:MusicBeatState = curState;
-		if(!FlxTransitionableState.skipNextTransIn) {
-			leState.openSubState(new CustomFadeTransition(0.6, false));
-			if(nextState == FlxG.state) {
-				CustomFadeTransition.finishCallback = function() {
-					FlxG.resetState();
-				};
-				//trace('resetted');
-			} else {
-				CustomFadeTransition.finishCallback = function() {
-					FlxG.switchState(nextState);
-				};
-				//trace('changed state');
-			}
+	public static function switchState(nextState:FlxState = null) {
+		if(nextState == null) nextState = FlxG.state;
+		if(nextState == FlxG.state)
+		{
+			resetState();
 			return;
 		}
+
+		if(FlxTransitionableState.skipNextTransIn) FlxG.switchState(nextState);
+		else startTransition(nextState);
 		FlxTransitionableState.skipNextTransIn = false;
-		FlxG.switchState(nextState);
 	}
 
 	public static function resetState() {
-		MusicBeatState.switchState(FlxG.state);
+		if(FlxTransitionableState.skipNextTransIn) FlxG.resetState();
+		else startTransition();
+		FlxTransitionableState.skipNextTransIn = false;
+	}
+	
+	// Custom made Trans in
+	public static function startTransition(nextState:FlxState = null)
+	{
+		if(nextState == null)
+			nextState = FlxG.state;
+		FlxG.state.openSubState(new CustomFadeTransition(0.6, false));
+		if(nextState == FlxG.state)
+			CustomFadeTransition.finishCallback = function() FlxG.resetState();
+		else
+			CustomFadeTransition.finishCallback = function() FlxG.switchState(nextState);
 	}
 
 	public static function getState():MusicBeatState {

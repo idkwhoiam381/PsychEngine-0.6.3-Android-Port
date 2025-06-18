@@ -1,9 +1,6 @@
 package mobile.objects;
 
-import flixel.FlxG;
-import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxSave;
-import flixel.math.FlxPoint;
 
 class Config {
 	var save:FlxSave;
@@ -29,83 +26,84 @@ class Config {
 		return save.data.buttonsmode[0];
 	}
 
-	public function savecustom(_pad:FlxVirtualPad) {
+	public function savecustom(_pad:MobilePad) {
 		if (save.data.buttons == null)
 		{
 			save.data.buttons = new Array();
 			if (!isExtend){
-    			for (buttons in _pad){
-    				save.data.buttons.push(FlxPoint.get(buttons.x, buttons.y));
-    			}
-			}
-			else{
-			    save.data.buttons[0] = FlxPoint.get(_pad.buttonExtra2.x, _pad.buttonExtra2.y);
-			    save.data.buttons[1] = FlxPoint.get(_pad.buttonExtra1.x, _pad.buttonExtra1.y);
-			    save.data.buttons[2] = FlxPoint.get(_pad.buttonExtra3.x, _pad.buttonExtra3.y);
-			    save.data.buttons[3] = FlxPoint.get(_pad.buttonExtra4.x, _pad.buttonExtra4.y);
-			}
-		}else{
-			if (!isExtend){
-			    var tempCount:Int = 0;
-			    for (buttons in _pad){
-				    save.data.buttons[tempCount] = FlxPoint.get(buttons.x, buttons.y);
-				    tempCount++;
+				for (buttons in _pad){
+					save.data.buttons.push(FlxPoint.get(buttons.x, buttons.y));
 				}
 			}
 			else{
-			    save.data.buttons[0] = FlxPoint.get(_pad.buttonExtra2.x, _pad.buttonExtra2.y);
-			    save.data.buttons[1] = FlxPoint.get(_pad.buttonExtra1.x, _pad.buttonExtra1.y);
-			    save.data.buttons[2] = FlxPoint.get(_pad.buttonExtra3.x, _pad.buttonExtra3.y);
-			    save.data.buttons[3] = FlxPoint.get(_pad.buttonExtra4.x, _pad.buttonExtra4.y);
+				save.data.buttons[0] = FlxPoint.get(_pad.buttonExtra2.x, _pad.buttonExtra2.y);
+				save.data.buttons[1] = FlxPoint.get(_pad.buttonExtra1.x, _pad.buttonExtra1.y);
+				save.data.buttons[2] = FlxPoint.get(_pad.buttonExtra3.x, _pad.buttonExtra3.y);
+				save.data.buttons[3] = FlxPoint.get(_pad.buttonExtra4.x, _pad.buttonExtra4.y);
+			}
+		}else{
+			if (!isExtend){
+				var tempCount:Int = 0;
+				for (buttons in _pad){
+					save.data.buttons[tempCount] = FlxPoint.get(buttons.x, buttons.y);
+					tempCount++;
+				}
+			}
+			else{
+				save.data.buttons[0] = FlxPoint.get(_pad.buttonExtra2.x, _pad.buttonExtra2.y);
+				save.data.buttons[1] = FlxPoint.get(_pad.buttonExtra1.x, _pad.buttonExtra1.y);
+				save.data.buttons[2] = FlxPoint.get(_pad.buttonExtra3.x, _pad.buttonExtra3.y);
+				save.data.buttons[3] = FlxPoint.get(_pad.buttonExtra4.x, _pad.buttonExtra4.y);
 			}
 		}
 		save.flush();
 	}
 
-	public function loadcustom(_pad:FlxVirtualPad):FlxVirtualPad {
+	public function loadcustom(_pad:MobilePad):MobilePad {
 		if (save.data.buttons == null) 
 			return _pad; 
 		var tempCount:Int = 0;
 		if (!isExtend){
-    		for(buttons in _pad){
-    			buttons.x = save.data.buttons[tempCount].x;
-    			buttons.y = save.data.buttons[tempCount].y;
-    			tempCount++;
-    		}
+			for(buttons in _pad){
+				buttons.x = save.data.buttons[tempCount].x;
+				buttons.y = save.data.buttons[tempCount].y;
+				tempCount++;
+			}
 		}
 		else{
-		    if (_pad.buttonExtra2 != null){
-		        _pad.buttonExtra2.x = save.data.buttons[0].x;
-			    _pad.buttonExtra2.y = save.data.buttons[0].y;
+			if (_pad.buttonExtra2 != null){
+				_pad.buttonExtra2.x = save.data.buttons[0].x;
+				_pad.buttonExtra2.y = save.data.buttons[0].y;
 			}
 			if (_pad.buttonExtra1 != null){
-			    _pad.buttonExtra1.x = save.data.buttons[1].x;
-			    _pad.buttonExtra1.y = save.data.buttons[1].y;
+				_pad.buttonExtra1.x = save.data.buttons[1].x;
+				_pad.buttonExtra1.y = save.data.buttons[1].y;
 			}
 			if (_pad.buttonExtra3 != null){
-		        _pad.buttonExtra3.x = save.data.buttons[2].x;
-			    _pad.buttonExtra3.y = save.data.buttons[2].y;
+				_pad.buttonExtra3.x = save.data.buttons[2].x;
+				_pad.buttonExtra3.y = save.data.buttons[2].y;
 			}
 			if (_pad.buttonExtra4 != null){
-		        _pad.buttonExtra4.x = save.data.buttons[3].x;
-			    _pad.buttonExtra4.y = save.data.buttons[3].y;
+				_pad.buttonExtra4.x = save.data.buttons[3].x;
+				_pad.buttonExtra4.y = save.data.buttons[3].y;
 			}
 		}
-	    return _pad;
+		return _pad;
 	}
 }
 
 class MobileControls extends FlxSpriteGroup {
-	public var mode:ControlsGroup = HITBOX;
+	public static var mode:ControlsGroup = HITBOX;
 
-	public var hbox:FlxHitbox;
-	public var newhbox:FlxNewHitbox;
-	public var vpad:FlxVirtualPad;
+	public var hbox:HitboxOld;
+	public var newhbox:Hitbox;
+	public var vpad:MobilePad;
+	public var current:CurrentManager;
 
 	var config:Config;
 	var extendConfig:Config;
 
-	public function new() {
+	public function new(?CustomMode:String) {
 		super();
 
 		config = new Config('saved-controls');
@@ -114,66 +112,66 @@ class MobileControls extends FlxSpriteGroup {
 		mode = getModeFromNumber(config.getcontrolmode());
 
 		switch (mode){
-			case VIRTUALPAD_RIGHT:
+			case MOBILEPAD_RIGHT:
 				initControler(0);
-			case VIRTUALPAD_LEFT:
+			case MOBILEPAD_LEFT:
 				initControler(1);
-			case VIRTUALPAD_CUSTOM:
+			case MOBILEPAD_CUSTOM:
 				initControler(2);
 			case DUO:
 				initControler(3);
 			case HITBOX:
-		    if(ClientPrefs.hitboxmode != 'New'){
-				initControler(4);
-		    }else{
-		    initControler(5);
-		    }
-			case KEYBOARD:// nothing
+				if(ClientPrefs.hitboxmode == 'Classic') initControler(4);
+				else initControler(5, CustomMode);
+			case KEYBOARD:
+				// nothing
 		}
+		current = new CurrentManager(this);
 	}
 
-	function initControler(vpadMode:Int) {
+	function initControler(vpadMode:Int, ?CustomMode:String) {
 		switch (vpadMode){
 			case 0:
-				vpad = new FlxVirtualPad(RIGHT_FULL, controlExtend, 0.75, ClientPrefs.globalAntialiasing);	
-				add(vpad);						
+				vpad = new MobilePad("RIGHT_FULL", "controlExtend");
+				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 1:
-				vpad = new FlxVirtualPad(FULL, controlExtend, 0.75, ClientPrefs.globalAntialiasing);
-				add(vpad);			
+				vpad = new MobilePad("FULL", "controlExtend");
+				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 2:
-				vpad = new FlxVirtualPad(FULL, controlExtend, 0.75, ClientPrefs.globalAntialiasing);
+				vpad = new MobilePad("FULL", "controlExtend");
 				vpad = config.loadcustom(vpad);
-				add(vpad);	
+				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 3:
-				vpad = new FlxVirtualPad(DUO, controlExtend, 0.75, ClientPrefs.globalAntialiasing);
-				add(vpad);		
+				vpad = new MobilePad("DUO", "controlExtend");
+				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 4:
-				hbox = new FlxHitbox(0.75, ClientPrefs.globalAntialiasing);
+				hbox = new HitboxOld(0.75, ClientPrefs.globalAntialiasing);
 				add(hbox);
 			case 5:
-			  newhbox = new FlxNewHitbox();
-			  add(newhbox);
+				if (CustomMode != null) newhbox = new Hitbox(CustomMode);
+				else newhbox = new Hitbox();
+				add(newhbox);
 			default:
-				newhbox = new FlxNewHitbox();
-			    add(newhbox);
+				newhbox = new Hitbox();
+				add(newhbox);
 		}
 	}
 
 	public static function getModeFromNumber(modeNum:Int):ControlsGroup {
 		return switch (modeNum){
 			case 0: 
-				VIRTUALPAD_RIGHT;
+				MOBILEPAD_RIGHT;
 			case 1: 
-				VIRTUALPAD_LEFT;
+				MOBILEPAD_LEFT;
 			case 2: 
-				VIRTUALPAD_CUSTOM;
+				MOBILEPAD_CUSTOM;
 			case 3: 
 				DUO;
-			case 4:	
+			case 4:
 				HITBOX;
 			case 5: 
 				KEYBOARD;
@@ -184,10 +182,43 @@ class MobileControls extends FlxSpriteGroup {
 }
 
 enum ControlsGroup {
-	VIRTUALPAD_RIGHT;
-	VIRTUALPAD_LEFT;
-	VIRTUALPAD_CUSTOM;
+	MOBILEPAD_RIGHT;
+	MOBILEPAD_LEFT;
+	MOBILEPAD_CUSTOM;
 	DUO;
 	HITBOX;
 	KEYBOARD;
+}
+
+class CurrentManager {
+	public var buttonLeft:MobileButton;
+	public var buttonDown:MobileButton;
+	public var buttonUp:MobileButton;
+	public var buttonRight:MobileButton;
+	public var buttonExtra1:MobileButton;
+	public var buttonExtra2:MobileButton;
+	public var buttonExtra3:MobileButton;
+	public var buttonExtra4:MobileButton;
+
+	public function new(control:MobileControls){
+		if(MobileControls.mode == HITBOX && ClientPrefs.hitboxmode != 'Classic') {
+			buttonLeft = control.newhbox.buttonLeft;
+			buttonDown = control.newhbox.buttonDown;
+			buttonUp = control.newhbox.buttonUp;
+			buttonRight = control.newhbox.buttonRight;
+			buttonExtra1 = control.newhbox.buttonExtra1;
+			buttonExtra2 = control.newhbox.buttonExtra2;
+			buttonExtra3 = control.newhbox.buttonExtra3;
+			buttonExtra4 = control.newhbox.buttonExtra4;
+		} else if (ClientPrefs.hitboxmode != 'Classic' && MobileControls.mode != KEYBOARD) {
+			buttonLeft = control.vpad.buttonLeft;
+			buttonDown = control.vpad.buttonDown;
+			buttonUp = control.vpad.buttonUp;
+			buttonRight = control.vpad.buttonRight;
+			buttonExtra1 = control.vpad.buttonExtra1;
+			buttonExtra2 = control.vpad.buttonExtra2;
+			buttonExtra3 = control.vpad.buttonExtra3;
+			buttonExtra4 = control.vpad.buttonExtra4;
+		}
+	}
 }

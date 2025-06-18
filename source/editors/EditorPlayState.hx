@@ -13,7 +13,6 @@ import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
@@ -166,11 +165,8 @@ class EditorPlayState extends MusicBeatState
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
 
-		#if mobile
+		#if TOUCH_CONTROLS
 		addMobileControls();
-		#end
-
-		#if mobile
 		MusicBeatState.mobilec.visible = true;
 		#end
 
@@ -337,9 +333,7 @@ class EditorPlayState extends MusicBeatState
 		{
 			FlxG.sound.music.pause();
 			vocals.pause();
-			#if mobile
-			MusicBeatState.mobilec.visible = false;
-			#end
+			#if TOUCH_CONTROLS MusicBeatState.mobilec.visible = false; #end
 			LoadingState.loadAndSwitchState(new editors.ChartingState());
 		}
 

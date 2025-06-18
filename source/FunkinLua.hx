@@ -17,7 +17,6 @@ import flixel.tweens.FlxEase;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -75,8 +74,8 @@ class FunkinLua {
 	public var camTarget:FlxCamera;
 	public var scriptName:String = '';
 	public var closed:Bool = false;
-	#if mobile
-    public var extra1:String = ClientPrefs.extraKeyReturn1.toUpperCase();
+	#if TOUCH_CONTROLS
+	public var extra1:String = ClientPrefs.extraKeyReturn1.toUpperCase();
 	public var extra2:String = ClientPrefs.extraKeyReturn2.toUpperCase();
 	public var extra3:String = ClientPrefs.extraKeyReturn3.toUpperCase();
 	public var extra4:String = ClientPrefs.extraKeyReturn4.toUpperCase();
@@ -85,7 +84,7 @@ class FunkinLua {
 	#if hscript
 	public static var hscript:HScript = null;
 	#end
-	
+
 	public function new(script:String) {
 		#if LUA_ALLOWED
 		lua = LuaL.newstate();
@@ -104,7 +103,7 @@ class FunkinLua {
 				#if windows
 				lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
 				#elseif android
-                CoolUtil.showPopUp(resultStr, "Error on .LUA script!");
+				CoolUtil.showPopUp(resultStr, "Error on .LUA script!");
 				#else
 				luaTrace('Error loading lua script: "$script"\n' + resultStr, true, false, FlxColor.RED);
 				#end
@@ -274,7 +273,7 @@ class FunkinLua {
 			#end
 			return false;
 		});
-		
+
 		Lua_helper.add_callback(lua, "setSpriteShader", function(obj:String, shader:String) {
 			if(!ClientPrefs.shaders) return false;
 
@@ -1060,21 +1059,21 @@ class FunkinLua {
 			Reflect.getProperty(getInstance(), obj).remove(Reflect.getProperty(getInstance(), obj)[index]);
 		});
 
-		    		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
+					Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
 			@:privateAccess
-			#if mobile
+			#if TOUCH_CONTROLS
 			var myClass:Dynamic = classCheck(classVar);
 			var variableplus:String = varCheck(myClass, variable);
 			#end
 			var killMe:Array<String> = variable.split('.');
-			#if mobile
+			#if TOUCH_CONTROLS
 			if (MusicBeatState.mobilec != null && myClass == 'flixel.FlxG' && variableplus.indexOf('key') != -1){
-    		    var check:Dynamic;
-    		    check = specialKeyCheck(variableplus); //fuck you old lua 🙃
-    		    if (check != null) return check;
-    		}
+				var check:Dynamic;
+				check = specialKeyCheck(variableplus); //fuck you old lua 🙃
+				if (check != null) return check;
+			}
 			#end
-           
+		   
 			if(killMe.length > 1) {
 				var coverMeInPiss:Dynamic = getVarInArray(Type.resolveClass(classVar), killMe[0]);
 				for (i in 1...killMe.length-1) {
@@ -1434,81 +1433,104 @@ class FunkinLua {
 
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String)
 		{
-			#if mobile
-            if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
-                if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed)
-    			    return true;
-			    if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed)
-    			    return true;
-                if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed)
-    			    return true;
-                if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.justPressed)
-    			    return true;
-            }
-            
-            if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
-                if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.justPressed)
-    			    return true;
-			    if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.justPressed)
-    			    return true;
-                if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.justPressed)
-    			    return true;
-                if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.justPressed)
-    			    return true;
-            }
-            #end
+			#if TOUCH_CONTROLS
+			if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed)
+					return true;
+				if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed)
+					return true;
+				if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.justPressed)
+					return true;
+			}
+
+			if (MusicBeatState.mobilec.hbox != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.hbox.buttonExtra1.justPressed)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.hbox.buttonExtra2.justPressed)
+					return true;
+			}
+
+			if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.justPressed)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.justPressed)
+					return true;
+				if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.justPressed)
+					return true;
+				if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.justPressed)
+					return true;
+			}
+			#end
 			return Reflect.getProperty(FlxG.keys.justPressed, name);
 		});
 		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String)
 		{
-		     #if mobile
-           if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
-			    if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed)
-    			    return true;
-                if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed)
-    			    return true;
-                if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed)
-    			    return true;
-                if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.pressed)
-    			    return true;
-           }
-           if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
-                if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.pressed)
-    			    return true;
-                if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.pressed)
-    			    return true;
-			    if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.pressed)
-    			    return true;                          
-                if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.pressed)
-    			    return true;
-           }
-           #end
+			#if TOUCH_CONTROLS
+			if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed)
+					return true;
+				if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed)
+					return true;
+				if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.pressed)
+					return true;
+			}
+
+			if (MusicBeatState.mobilec.hbox != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.hbox.buttonExtra1.pressed)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.hbox.buttonExtra2.pressed)
+					return true;
+			}
+
+			if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
+				if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.pressed)
+					return true;
+				if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.pressed)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.pressed)
+					return true;						  
+				if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.pressed)
+					return true;
+		   }
+		   #end
 			return Reflect.getProperty(FlxG.keys.pressed, name);
 		});
 		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String)
 		{
-		    #if mobile
-           if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
-                if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased)
-    			    return true;
-			    if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased)
-    			    return true;
-                if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased)
-    			    return true;
-                if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.justReleased)
-    			    return true;
-           }
-           if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
-                if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.justReleased)
-    			    return true;
-			    if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.justReleased)
-    			    return true;
-                if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.justReleased)
-    			    return true;
-                if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.justReleased)
-    			    return true;
-           }
-           #end
+			#if TOUCH_CONTROLS
+			if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased)
+					return true;
+				if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased)
+					return true;
+				if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.justReleased)
+					return true;
+			}
+
+			if (MusicBeatState.mobilec.hbox != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.hbox.buttonExtra1.justReleased)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.hbox.buttonExtra2.justReleased)
+					return true;
+			}
+
+			if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
+				if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.justReleased)
+					return true;
+				if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.justReleased)
+					return true;
+				if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.justReleased)
+					return true;
+				if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.justReleased)
+					return true;
+			}
+			#end
 			return Reflect.getProperty(FlxG.keys.justReleased, name);
 		});
 
@@ -1581,7 +1603,7 @@ class FunkinLua {
 				case 'accept': key = PlayState.instance.getControl('ACCEPT');
 				case 'back': key = PlayState.instance.getControl('BACK');
 				case 'pause': key = PlayState.instance.getControl('PAUSE');
-				case 'reset': key = PlayState.instance.getControl('RESET');	
+				case 'reset': key = PlayState.instance.getControl('RESET');
 				#if desktop
 				case 'space': key = FlxG.keys.justPressed.SPACE;//an extra key for convinience
 				#end
@@ -1590,15 +1612,15 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP_P');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_P');
 			}
-			#if mobile
+			#if TOUCH_CONTROLS
 			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
-			    key = PlayState.instance.getControl('EXTRA1_P');
-		    if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA2_P');
-		    if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA3_P');
-		    if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA4_P');
+				key = PlayState.instance.getControl('EXTRA1_P');
+			if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA2_P');
+			if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA3_P');
+			if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA4_P');
 			#end
 			return key;
 		});
@@ -1609,7 +1631,7 @@ class FunkinLua {
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP');
 				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT');
-				#if mobile
+				#if desktop
 				case 'space': key = FlxG.keys.pressed.SPACE;//an extra key for convinience
 				#end
 				case 'ui_left': key = PlayState.instance.getControl('UI_LEFT');
@@ -1617,15 +1639,15 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT');
 			}
-			#if mobile
+			#if TOUCH_CONTROLS
 			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
-			    key = PlayState.instance.getControl('EXTRA1');
-		    if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA2');
-		    if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA3');
-		    if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA4');
+				key = PlayState.instance.getControl('EXTRA1');
+			if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA2');
+			if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA3');
+			if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA4');
 			#end
 			return key;
 		});
@@ -1635,8 +1657,8 @@ class FunkinLua {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_R');
 				case 'down': key = PlayState.instance.getControl('NOTE_DOWN_R');
 				case 'up': key = PlayState.instance.getControl('NOTE_UP_R');
-				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT_R');		
-				#if mobile
+				case 'right': key = PlayState.instance.getControl('NOTE_RIGHT_R');
+				#if desktop
 				case 'space': key = FlxG.keys.justReleased.SPACE;//an extra key for convinience
 				#end
 				case 'ui_left': key = PlayState.instance.getControl('UI_LEFT_R');
@@ -1644,15 +1666,15 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP_R');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_R');
 			}
-			#if mobile
+			#if TOUCH_CONTROLS
 			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
-			    key = PlayState.instance.getControl('EXTRA1_R');
-		    if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA2_R');
-		    if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA3_R');
-		    if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
-		        key = PlayState.instance.getControl('EXTRA4_R');
+				key = PlayState.instance.getControl('EXTRA1_R');
+			if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA2_R');
+			if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA3_R');
+			if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
+				key = PlayState.instance.getControl('EXTRA4_R');
 			#end
 			return key;
 		});
@@ -1952,7 +1974,7 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "addAnimationByIndicesLoop", function(obj:String, name:String, prefix:String, indices:String, framerate:Int = 24) {
 			return addAnimByIndices(obj, name, prefix, indices, framerate, true);
 		});
-		
+
 
 		Lua_helper.add_callback(lua, "playAnim", function(obj:String, name:String, forced:Bool = false, ?reverse:Bool = false, ?startFrame:Int = 0)
 		{
@@ -2454,7 +2476,7 @@ class FunkinLua {
 			if (text5 == null) text5 = '';
 			luaTrace('' + text1 + text2 + text3 + text4 + text5, true, false);
 		});
-		
+
 		Lua_helper.add_callback(lua, "close", function() {
 			closed = true;
 			return closed;
@@ -2893,7 +2915,7 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "stringTrim", function(str:String) {
 			return str.trim();
 		});
-		
+
 		Lua_helper.add_callback(lua, "directoryFileList", function(folder:String) {
 			var list:Array<String> = [];
 			#if sys
@@ -2907,7 +2929,7 @@ class FunkinLua {
 			#end
 			return list;
 		});
-		
+
 		#if android AndroidFunctions.implement(this); #end
 		#if mobile MobileFunctions.implement(this); #end
 
@@ -2963,7 +2985,7 @@ class FunkinLua {
 		/*if(Std.isOfType(instance, Map))
 			instance.set(variable,value);
 		else*/
-			
+
 		if(PlayState.instance.variables.exists(variable))
 		{
 			PlayState.instance.variables.set(variable, value);
@@ -3028,7 +3050,7 @@ class FunkinLua {
 		return null;
 	}
 	#end
-	
+
 	function initLuaShader(name:String, ?glslVersion:Int = 120)
 	{
 		if(!ClientPrefs.shaders) return false;
@@ -3046,7 +3068,7 @@ class FunkinLua {
 
 		for(mod in Paths.getGlobalMods())
 			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
-		
+
 		for (folder in foldersToCheck)
 		{
 			if(FileSystem.exists(folder))
@@ -3442,35 +3464,37 @@ class FunkinLua {
 		lua = null;
 		#end
 	}
-	
-	#if mobile
-    public static function varCheck(className:Dynamic, variable:String):String{
-	    return variable;
+
+	#if TOUCH_CONTROLS
+	public static function varCheck(className:Dynamic, variable:String):String{
+		return variable;
 	}
-	
+
 	public static function classCheck(className:String):Dynamic
 	{
-	    return Type.resolveClass(className);
+		return Type.resolveClass(className);
 	}
-	
+
 	public static function specialKeyCheck(keyName:String):Dynamic
 	{
-	    var textfix:Array<String> = keyName.trim().split('.');
-	    var type:String = textfix[1].trim();
-	    var key:String = textfix[2].trim();    			
-	    var extraControl:Dynamic = null;
-	    
-	    for (num in 1...5){
-	        if (ClientPrefs.extraKeys >= num && key == Reflect.field(ClientPrefs, 'extraKeyReturn' + num)){
-	            if (MusicBeatState.mobilec.newhbox != null)
-	                extraControl = Reflect.getProperty(MusicBeatState.mobilec.newhbox, 'buttonExtra' + num);	            
-	            else
-	                extraControl = Reflect.getProperty(MusicBeatState.mobilec.vpad, 'buttonExtra' + num);
-	            if (Reflect.getProperty(extraControl, type))
-	                return true;
-	        }
-	    }	    	    
-	    return null;
+		var textfix:Array<String> = keyName.trim().split('.');
+		var type:String = textfix[1].trim();
+		var key:String = textfix[2].trim();
+		var extraControl:Dynamic = null;
+
+		for (num in 1...5){
+			if (ClientPrefs.extraKeys >= num && key == Reflect.field(ClientPrefs, 'extraKeyReturn' + num)){
+				if (MusicBeatState.mobilec.newhbox != null)
+					extraControl = Reflect.getProperty(MusicBeatState.mobilec.newhbox, 'buttonExtra' + num);
+				else if (MusicBeatState.mobilec.hbox != null)
+					extraControl = Reflect.getProperty(MusicBeatState.mobilec.hbox, 'buttonExtra' + num);
+				else
+					extraControl = Reflect.getProperty(MusicBeatState.mobilec.vpad, 'buttonExtra' + num);
+				if (Reflect.getProperty(extraControl, type))
+					return true;
+			}
+		}
+		return null;
 	}
 	#end
 
@@ -3539,14 +3563,14 @@ class CustomSubstate extends MusicBeatSubstate
 		super.create();
 		PlayState.instance.callOnLuas('onCustomSubstateCreatePost', [name]);
 	}
-	
+
 	public function new(name:String)
 	{
 		CustomSubstate.name = name;
 		super();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
-	
+
 	override function update(elapsed:Float)
 	{
 		PlayState.instance.callOnLuas('onCustomSubstateUpdate', [name, elapsed]);

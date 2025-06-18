@@ -27,7 +27,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -1213,11 +1212,11 @@ class PlayState extends MusicBeatState
 		timeTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 		
-		#if mobile
+		#if TOUCH_CONTROLS
 		addMobileControls();
-    	MusicBeatState.mobilec.visible = false;
-    	if (ClientPrefs.hitboxmode == 'New' && !ClientPrefs.hitboxhint) MusicBeatState.mobilec.alpha = 0.000001;
-    	#end
+		MusicBeatState.mobilec.visible = false;
+		if (ClientPrefs.hitboxmode != 'Classic' && !ClientPrefs.hitboxhint) MusicBeatState.mobilec.alpha = 0.000001;
+		#end
 
 		// if (SONG.song == 'South')
 		// FlxG.camera.alpha = 0.7;
@@ -2137,10 +2136,10 @@ class PlayState extends MusicBeatState
 		var ret:Dynamic = callOnLuas('onStartCountdown', [], false);
 		if(ret != FunkinLua.Function_Stop) {
 			if (skipCountdown || startOnTime > 0) skipArrowStartTween = true;
-			#if mobile
+			#if TOUCH_CONTROLS
 			MusicBeatState.mobilec.visible = true;
-    		if (MusicBeatState.checkHitbox != true) MusicBeatState.mobilec.alpha = ClientPrefs.VirtualPadAlpha;
-    		#end
+			if (MusicBeatState.checkHitbox != true) MusicBeatState.mobilec.alpha = ClientPrefs.mobilePadAlpha;
+			#end
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
@@ -3960,9 +3959,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-        #if mobile
-        MusicBeatState.mobilec.visible = false;
-        #end
+		#if TOUCH_CONTROLS MusicBeatState.mobilec.visible = false; #end
 		timeBarBG.visible = false;
 		timeBar.visible = false;
 		timeTxt.visible = false;
@@ -5358,4 +5355,29 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
+
+	#if TOUCH_CONTROLS
+	public static function checkHBoxPress(button:String, type = 'justPressed') {
+		if (MusicBeatState.mobilec.newhbox != null) button = Reflect.getProperty(MusicBeatState.mobilec.newhbox, button);
+		else button = Reflect.getProperty(MusicBeatState.mobilec.hbox, button);
+		return Reflect.getProperty(button, type);
+		return false;
+	}
+
+	public function changeControls(?mode:String)
+	{
+		removeMobileControls();
+		addMobileControls(mode);
+	}
+
+	public function addControls(?mode:String)
+	{
+		addMobileControls(mode);
+	}
+
+	public function removeControls()
+	{
+		removeMobileControls();
+	}
+	#end
 }

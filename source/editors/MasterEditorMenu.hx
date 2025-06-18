@@ -11,7 +11,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.system.FlxSound;
 #if MODS_ALLOWED
 import sys.FileSystem;
 #end
@@ -83,8 +82,8 @@ class MasterEditorMenu extends MusicBeatState
 
 		FlxG.mouse.visible = false;
 
-		#if mobile
-		addVirtualPad(FULL, A_B);
+		#if TOUCH_CONTROLS
+		addMobilePad("FULL", "A_B");
 		#end
 
 		super.create();

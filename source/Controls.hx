@@ -10,11 +10,7 @@ import flixel.input.actions.FlxActionSet;
 import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
-
-#if mobile
 import flixel.group.FlxGroup;
-import mobile.flixel.FlxVirtualPad;
-#end
 
 enum abstract Action(String) to String from String
 {
@@ -402,18 +398,18 @@ class Controls extends FlxActionSet
 		setKeyboardScheme(scheme, false);
 	}
 	
-	#if mobile
+	#if TOUCH_CONTROLS
 	public var trackedInputsUI:Array<FlxActionInput> = [];
 	public var trackedInputsNOTES:Array<FlxActionInput> = [];
 
-	public function addButtonNOTES(action:FlxActionDigital, button:FlxButton, state:FlxInputState):Void
+	public function addButtonNOTES(action:FlxActionDigital, button:Dynamic, state:FlxInputState):Void
 	{
 		var input:FlxActionInputDigitalIFlxInput = new FlxActionInputDigitalIFlxInput(button, state);
 		trackedInputsNOTES.push(input);
 		action.add(input);
 	}
 
-	public function addButtonUI(action:FlxActionDigital, button:FlxButton, state:FlxInputState):Void
+	public function addButtonUI(action:FlxActionDigital, button:Dynamic, state:FlxInputState):Void
 	{
 		if (button == null)
 			return;
@@ -423,142 +419,133 @@ class Controls extends FlxActionSet
 		action.add(input);
 	}
 	
-	public function addHitboxNOTES(action:FlxActionDigital, button:FlxButton, state:FlxInputState)
+	public function addHitboxNOTES(action:FlxActionDigital, button:Dynamic, state:FlxInputState)
 	{
 		var input = new FlxActionInputDigitalIFlxInput(button, state);
 		trackedInputsNOTES.push(input);
 		action.add(input);
 	}
 
-	public function setHitBox(hitbox:FlxHitbox) 
+	public function setHitBox(Hitbox:Hitbox, HitboxOld:HitboxOld)
 	{
-		inline forEachBound(Control.NOTE_UP, (action, state) -> addHitboxNOTES(action, hitbox.buttonUp, state));
-		inline forEachBound(Control.NOTE_DOWN, (action, state) -> addHitboxNOTES(action, hitbox.buttonDown, state));
-		inline forEachBound(Control.NOTE_LEFT, (action, state) -> addHitboxNOTES(action, hitbox.buttonLeft, state));
-		inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addHitboxNOTES(action, hitbox.buttonRight, state));	
-	}
-	
-	
-	public function setNewHitBox(Hitbox:FlxNewHitbox)
-	{
-		inline forEachBound(Control.NOTE_UP, (action, state) -> addHitboxNOTES(action, Hitbox.buttonUp, state));
-		inline forEachBound(Control.NOTE_DOWN, (action, state) -> addHitboxNOTES(action, Hitbox.buttonDown, state));
-		inline forEachBound(Control.NOTE_LEFT, (action, state) -> addHitboxNOTES(action, Hitbox.buttonLeft, state));
-		inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addHitboxNOTES(action, Hitbox.buttonRight, state));
-		inline forEachBound(Control.EXTRA1, (action, state) -> addHitboxNOTES(action, Hitbox.buttonExtra1, state));
-		inline forEachBound(Control.EXTRA2, (action, state) -> addHitboxNOTES(action, Hitbox.buttonExtra2, state));
-		inline forEachBound(Control.EXTRA3, (action, state) -> addHitboxNOTES(action, Hitbox.buttonExtra3, state));
-		inline forEachBound(Control.EXTRA4, (action, state) -> addHitboxNOTES(action, Hitbox.buttonExtra4, state));
+		if (ClientPrefs.hitboxmode == 'Classic') {
+			inline forEachBound(Control.NOTE_UP, (action, state) -> addHitboxNOTES(action, HitboxOld.buttonUp, state));
+			inline forEachBound(Control.NOTE_DOWN, (action, state) -> addHitboxNOTES(action, HitboxOld.buttonDown, state));
+			inline forEachBound(Control.NOTE_LEFT, (action, state) -> addHitboxNOTES(action, HitboxOld.buttonLeft, state));
+			inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addHitboxNOTES(action, HitboxOld.buttonRight, state));
+		}
+		else {
+			inline forEachBound(Control.NOTE_UP, (action, state) -> addHitboxNOTES(action, Hitbox.buttonUp, state));
+			inline forEachBound(Control.NOTE_DOWN, (action, state) -> addHitboxNOTES(action, Hitbox.buttonDown, state));
+			inline forEachBound(Control.NOTE_LEFT, (action, state) -> addHitboxNOTES(action, Hitbox.buttonLeft, state));
+			inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addHitboxNOTES(action, Hitbox.buttonRight, state));
+		}
 	}
 
-	public function setVirtualPadUI(VirtualPad:FlxVirtualPad, DPad:FlxDPadMode, Action:FlxActionMode):Void
+	public function setMobilePadUI(MobilePad:MobilePad, DPad:String, Action:String):Void
 	{
-		if (VirtualPad == null)
+		if (MobilePad == null)
 			return;
 
 		switch (DPad)
 		{
-			case UP_DOWN | OptionsC:
-				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, VirtualPad.buttonDown, state));
-			case LEFT_RIGHT:
-				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, VirtualPad.buttonRight, state));
-			case UP_LEFT_RIGHT:
-				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, VirtualPad.buttonRight, state));
-			case FULL | RIGHT_FULL | PAUSE | CHART_EDITOR | ALL:
-				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, VirtualPad.buttonDown, state));
-				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, VirtualPad.buttonRight, state));
-			case DUO:
-				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, VirtualPad.buttonDown, state));
-				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, VirtualPad.buttonRight, state));
-				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, VirtualPad.buttonUp2, state));
-				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, VirtualPad.buttonDown2, state));
-				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, VirtualPad.buttonLeft2, state));
-				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, VirtualPad.buttonRight2, state));
-			case NONE: // do nothing
+			case "UP_DOWN" | "OptionsC":
+				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, MobilePad.buttonDown, state));
+			case "LEFT_RIGHT":
+				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, MobilePad.buttonRight, state));
+			case "UP_LEFT_RIGHT":
+				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, MobilePad.buttonRight, state));
+			case "DUO":
+				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, MobilePad.buttonDown, state));
+				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, MobilePad.buttonRight, state));
+				inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, MobilePad.buttonUp2, state));
+				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, MobilePad.buttonDown2, state));
+				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, MobilePad.buttonLeft2, state));
+				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, MobilePad.buttonRight2, state));
+			case "NONE": // do nothing
+			default:
+			    inline forEachBound(Control.UI_UP, (action, state) -> addButtonUI(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.UI_DOWN, (action, state) -> addButtonUI(action, MobilePad.buttonDown, state));
+				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, MobilePad.buttonRight, state));
 		}
 
 		switch (Action)
 		{
-			case A | A_C | A_X_Y | ALL:
-				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, VirtualPad.buttonA, state));
-			case B | B_X_Y | B_E:
-				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, VirtualPad.buttonB, state));
-			case P:
-				inline forEachBound(Control.PAUSE, (action, state) -> addButtonUI(action, VirtualPad.buttonP, state));
-			case A_B | A_B_C | A_B_E | A_B_E_C_M | A_B_X_Y | A_B_C_X_Y | A_B_C_X_Y_Z | FULL | CHART_EDITOR:
-				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, VirtualPad.buttonA, state));
-				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, VirtualPad.buttonB, state));
-			case OptionsC:
-				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, VirtualPad.buttonRight, state));
-				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, VirtualPad.buttonA, state));
-				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, VirtualPad.buttonB, state));
-			case NONE | E | controlExtend | D | X_Y: // do nothing
+			case "A" | "ChartingStateC":
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, MobilePad.buttonA, state));
+			case "B" | "B_X_Y" | "B_E":
+				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, MobilePad.buttonB, state));
+			case "OptionsC":
+				inline forEachBound(Control.UI_LEFT, (action, state) -> addButtonUI(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.UI_RIGHT, (action, state) -> addButtonUI(action, MobilePad.buttonRight, state));
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, MobilePad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, MobilePad.buttonB, state));
+			case "NONE" | "E" | "controlExtend": // do nothing
+			default:
+			    inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, MobilePad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, MobilePad.buttonB, state));
 		}
 	}
 
-	public function setVirtualPadNOTES(VirtualPad:FlxVirtualPad, DPad:FlxDPadMode, Action:FlxActionMode):Void
+	public function setMobilePadNOTES(MobilePad:MobilePad, DPad:String, Action:String):Void
 	{
-		if (VirtualPad == null)
+		if (MobilePad == null)
 			return;
 
 		switch (DPad)
 		{
-			case UP_DOWN | OptionsC:
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
-			case LEFT_RIGHT:
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-			case UP_LEFT_RIGHT:
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-			case FULL | RIGHT_FULL | PAUSE | CHART_EDITOR | ALL:
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-			case DUO:
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp2, state));
-				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown2, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft2, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight2, state));
-			case NONE: // do nothing
+			case "UP_DOWN" | "OptionsC":
+				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, MobilePad.buttonDown, state));
+			case "LEFT_RIGHT":
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, MobilePad.buttonRight, state));
+			case "UP_LEFT_RIGHT":
+				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, MobilePad.buttonRight, state));
+			case "DUO":
+				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, MobilePad.buttonDown, state));
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, MobilePad.buttonRight, state));
+				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, MobilePad.buttonUp2, state));
+				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, MobilePad.buttonDown2, state));
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, MobilePad.buttonLeft2, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, MobilePad.buttonRight2, state));
+			case "NONE": // do nothing
+			default:
+			    inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, MobilePad.buttonUp, state));
+				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, MobilePad.buttonDown, state));
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, MobilePad.buttonRight, state));
 		}
 
 		switch (Action)
 		{
-			case A | A_C | A_X_Y | ALL:
-				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonA, state));
-			case B | B_X_Y | B_E:
-				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, VirtualPad.buttonB, state));
-			case P:
-				inline forEachBound(Control.PAUSE, (action, state) -> addButtonNOTES(action, VirtualPad.buttonP, state));
-			case A_B | A_B_C | A_B_E | A_B_E_C_M | A_B_X_Y | A_B_C_X_Y | A_B_C_X_Y_Z | FULL | CHART_EDITOR:
-				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonA, state));
-				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, VirtualPad.buttonB, state));
-			case OptionsC:
-				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonA, state));
-				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, VirtualPad.buttonB, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-			case NONE | E | controlExtend | D | X_Y: // do nothing
+			case "A" | "ChartingStateC":
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, MobilePad.buttonA, state));
+			case "B" | "B_X_Y" | "B_E":
+				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, MobilePad.buttonB, state));
+			case "OptionsC":
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, MobilePad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, MobilePad.buttonB, state));
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, MobilePad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, MobilePad.buttonRight, state));
+			case "NONE" | "E" | "controlExtend": // do nothing
+			default:
+			    inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, MobilePad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, MobilePad.buttonB, state));
 		}
 	}
-	
+
 	public function removeVirtualControlsInput(Tinputs:Array<FlxActionInput>):Void
 	{
 		for (action in this.digitalActions)
@@ -575,7 +562,7 @@ class Controls extends FlxActionSet
 			}
 		}
 	}
-    #end	
+	#end
 
 	override function update()
 	{

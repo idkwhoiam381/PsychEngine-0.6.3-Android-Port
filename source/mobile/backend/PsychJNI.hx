@@ -7,7 +7,7 @@ package mobile.backend;
 
 /**
  * ...
- * @author Lily Ross (mcagabe19)
+ * @author Administrator (Unknown Person)
  */
 #if android
 import lime.system.JNI;

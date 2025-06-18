@@ -1,5 +1,6 @@
 package flixel.system;
 
+#if !NEW_PSYCH063
 import flash.events.Event;
 import flash.events.IEventDispatcher;
 import flash.media.Sound;
@@ -797,3 +798,6 @@ class FlxSound extends FlxBasic
 		]);
 	}
 }
+#else
+typedef FlxSound = flixel.sound.FlxSound;
+#end

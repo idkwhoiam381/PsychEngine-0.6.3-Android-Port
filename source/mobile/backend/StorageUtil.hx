@@ -10,7 +10,7 @@ import android.callback.CallBack;
 
 /**
  * A storage class for mobile.
- * @author Mihai Alexandru (M.A. Jigsaw), Karim Akra and Lily Ross (mcagabe19)
+ * @author Mihai Alexandru (M.A. Jigsaw)
  */
 class StorageUtil
 {
@@ -29,6 +29,8 @@ class StorageUtil
 		daPath = Path.addTrailingSlash(daPath);
 		#elseif ios
 		daPath = LimeSystem.documentsDirectory;
+		#else
+		daPath = Sys.getCwd();
 		#end
 
 		return daPath;
@@ -74,6 +76,7 @@ class StorageUtil
 		}
 	}
 
+    #if !FILE_DIALOG_FOR_MOBILE
 	public static function saveContent(fileName:String, fileData:String, ?alert:Bool = true):Void
 	{
 		try
@@ -91,12 +94,13 @@ class StorageUtil
 			else
 				trace('$fileName couldn\'t be saved. (${e.message})');
 	}
+	#end
 
 	#if android
 	public static function requestPermissions():Void
 	{
 		if (AndroidVersion.SDK_INT >= AndroidVersionCode.TIRAMISU)
-			AndroidPermissions.requestPermissions(['READ_MEDIA_IMAGES', 'READ_MEDIA_VIDEO', 'READ_MEDIA_AUDIO']);
+			AndroidPermissions.requestPermissions(['READ_MEDIA_IMAGES', 'READ_MEDIA_VIDEO', 'READ_MEDIA_AUDIO', 'READ_MEDIA_VISUAL_USER_SELECTED']);
 		else
 			AndroidPermissions.requestPermissions(['READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']);
 
@@ -154,13 +158,20 @@ class StorageUtil
 enum abstract StorageType(String) from String to String
 {
     final forcedPath = '/storage/emulated/0/';
-	final packageNameLocal = 'com.kraloyuncu.psychengine063';
+	final packageNameLocal = 'com.kraloyuncu.psychextended' #if debugBuild + '.debug' #end;
+	final fileLocalONLINE = 'PsychOnline';
 	final fileLocal = 'PsychEngine';
+	final fileLocalNF = 'NF Engine';
+	final fileLocalEX = 'Psych Extended'; //idk why
 
 	var EXTERNAL_DATA = "EXTERNAL_DATA";
 	var EXTERNAL_OBB = "EXTERNAL_OBB";
 	var EXTERNAL_MEDIA = "EXTERNAL_MEDIA";
 	var EXTERNAL = "EXTERNAL";
+	var EXTERNAL_ONLINE = "EXTERNAL_ONLINE";
+	var EXTERNAL_NF = "EXTERNAL_NF";
+	var EXTERNAL_EX = "EXTERNAL_EX";
+	var EXTERNAL_PE = "EXTERNAL_PE";
 
 	public static function fromStr(str:String):StorageType
 	{
@@ -168,6 +179,9 @@ enum abstract StorageType(String) from String to String
 		final EXTERNAL_OBB = AndroidContext.getObbDir();
 		final EXTERNAL_MEDIA = AndroidEnvironment.getExternalStorageDirectory() + '/Android/media/' + lime.app.Application.current.meta.get('packageName');
 		final EXTERNAL = AndroidEnvironment.getExternalStorageDirectory() + '/.' + fileLocal;
+		final EXTERNAL_NF = AndroidEnvironment.getExternalStorageDirectory() + '/.' + fileLocalNF;
+		final EXTERNAL_EX = AndroidEnvironment.getExternalStorageDirectory() + '/.' + lime.app.Application.current.meta.get('file');
+		final EXTERNAL_ONLINE = AndroidEnvironment.getExternalStorageDirectory() + '/.' + fileLocalONLINE;
 
 		return switch (str)
 		{
@@ -175,6 +189,9 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
+			case "EXTERNAL_NF": EXTERNAL_NF;
+			case "EXTERNAL_EX": EXTERNAL_EX;
+			case "EXTERNAL_ONLINE": EXTERNAL_ONLINE;
 			default: StorageUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}
@@ -184,7 +201,10 @@ enum abstract StorageType(String) from String to String
 		final EXTERNAL_DATA = forcedPath + 'Android/data/' + packageNameLocal + '/files';
 		final EXTERNAL_OBB = forcedPath + 'Android/obb/' + packageNameLocal;
 		final EXTERNAL_MEDIA = forcedPath + 'Android/media/' + packageNameLocal;
+		final EXTERNAL_ONLINE = forcedPath + '.' + fileLocalONLINE;
 		final EXTERNAL = forcedPath + '.' + fileLocal;
+		final EXTERNAL_NF = forcedPath + '.' + fileLocalNF;
+		final EXTERNAL_EX = forcedPath + '.' + fileLocalEX;
 
 		return switch (str)
 		{
@@ -193,6 +213,9 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
+			case "EXTERNAL_NF": EXTERNAL_NF;
+			case "EXTERNAL_EX": EXTERNAL_EX;
+			case "EXTERNAL_ONLINE": EXTERNAL_ONLINE;
 			default: StorageUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}

@@ -31,7 +31,9 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var curSelected:Int = 1;
 	private static var curAlt:Bool = false;
 
-    var SelectSubstate = MobileControlSelectSubState;
+	#if TOUCH_CONTROLS
+	var SelectSubstate = MobileControlSelectSubState;
+	#end
 	private static var defaultKey:String = 'Reset to Default Keys';
 	private var bindLength:Int = 0;
 
@@ -112,9 +114,9 @@ class ControlsSubState extends MusicBeatSubstate {
 		}
 		changeSelection();
 		
-		#if mobile
-		addVirtualPad(FULL, A_B);
-		addVirtualPadCamera();
+		#if TOUCH_CONTROLS
+		addMobilePad("FULL", "A_B");
+		addMobilePadCamera();
 		#end
 	}
 
@@ -134,31 +136,13 @@ class ControlsSubState extends MusicBeatSubstate {
 
 			if (controls.BACK) {
 				ClientPrefs.reloadControls();
-				#if mobile
+				#if TOUCH_CONTROLS
 				if (MobileControlSelectSubState.inControlsSubstate)
 				{
-				    SelectSubstate.leftArrow.visible = SelectSubstate.rightArrow.visible = SelectSubstate.grpControls.visible = SelectSubstate.exit.visible = SelectSubstate.reset.visible = SelectSubstate.keyboard.visible = SelectSubstate.tipText.visible = true;
-				    
-				    if (SelectSubstate.daChoice == "Pad-Custom")
-                    {
-                        SelectSubstate.upPozition.visible = true;
-                        SelectSubstate.downPozition.visible = true;
-                        SelectSubstate.leftPozition.visible = true;
-                        SelectSubstate.rightPozition.visible = true;
-                        SelectSubstate.extra4Pozition.visible = true;
-                        SelectSubstate.extra3Pozition.visible = true;
-                        SelectSubstate.extra2Pozition.visible = true;
-                        SelectSubstate.extra1Pozition.visible = true;
-                    }
-                    else if (SelectSubstate.daChoice != "Hitbox" && SelectSubstate.daChoice != "Keyboard" && SelectSubstate.daChoice != 'Pad-Custom')
-                    {
-                        SelectSubstate.extra4Pozition.visible = true;
-                        SelectSubstate.extra3Pozition.visible = true;
-                        SelectSubstate.extra2Pozition.visible = true;
-                        SelectSubstate.extra1Pozition.visible = true;
-                    }
-                    SelectSubstate.titleText.text = 'Mobile Controls';
-				    MobileControlSelectSubState.inControlsSubstate = false; // Not Needed But IDK
+					SelectSubstate.leftArrow.visible = SelectSubstate.rightArrow.visible = SelectSubstate.grpControls.visible = SelectSubstate.exit.visible = SelectSubstate.reset.visible = SelectSubstate.keyboard.visible = SelectSubstate.tipText.visible = true;
+
+					SelectSubstate.titleText.text = 'Mobile Controls';
+					MobileControlSelectSubState.inControlsSubstate = false; // Not Needed But IDK
 				}
 				#end
 				close();

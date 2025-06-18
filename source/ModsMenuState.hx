@@ -15,7 +15,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import lime.utils.Assets;
-import flixel.system.FlxSound;
 import openfl.utils.Assets as OpenFlAssets;
 import sys.io.File;
 import sys.FileSystem;
@@ -377,8 +376,8 @@ class ModsMenuState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 		
-		#if mobile
-        addVirtualPad(UP_DOWN, B);
+		#if TOUCH_CONTROLS
+        addMobilePad("UP_DOWN", "B");
         #end
 
 		super.create();

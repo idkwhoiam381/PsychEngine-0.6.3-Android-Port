@@ -70,9 +70,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		camFollowPos.setPosition(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2));
 		add(camFollowPos);
 		
-		#if mobile
-		addVirtualPad(NONE, A_B);
-		addVirtualPadCamera();
+		#if TOUCH_CONTROLS
+		addMobilePad("NONE", "A_B");
+		addMobilePadCamera();
 		#end
 	}
 
@@ -87,8 +87,8 @@ class GameOverSubstate extends MusicBeatSubstate
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 		}
 		
-		#if mobile
-		addVirtualPadCamera();
+		#if TOUCH_CONTROLS
+		addMobilePadCamera();
 		#end
 
 		if (controls.ACCEPT)

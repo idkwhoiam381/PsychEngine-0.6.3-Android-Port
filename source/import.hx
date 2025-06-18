@@ -1,3 +1,4 @@
+#if !macro
 import Paths;
 
 #if sys
@@ -5,6 +6,25 @@ import sys.*;
 import sys.io.*;
 #elseif js
 import js.html.*;
+#end
+
+// Mobile Things
+#if TOUCH_CONTROLS
+import mobile.flixel.*;
+import mobile.states.*;
+import mobile.objects.*;
+import mobile.options.*;
+import mobile.backend.*;
+import mobile.psychlua.*;
+import mobile.substates.*;
+import mobile.objects.Hitbox;
+import mobile.objects.MobilePad;
+import mobile.backend.MobileData;
+#else
+import mobile.backend.StorageUtil;
+import mobile.backend.PsychJNI;
+import mobile.options.*;
+import mobile.backend.MobileScaleMode;
 #end
 
 // Android
@@ -19,18 +39,6 @@ import android.os.Environment as AndroidEnvironment;
 import android.os.BatteryManager as AndroidBatteryManager;
 import android.os.Build.VERSION_CODES as AndroidVersionCode;
 #end
-
-// Mobile Things
-import mobile.flixel.*;
-import mobile.states.*;
-import mobile.objects.*;
-import mobile.options.*;
-import mobile.backend.*;
-import mobile.substates.*;
-import mobile.backend.Data;
-import mobile.flixel.FlxHitbox;
-import mobile.flixel.FlxVirtualPad;
-import mobile.flixel.FlxNewHitbox;
 
 // Lua
 #if LUA_ALLOWED
@@ -50,10 +58,16 @@ import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxEase;
+#if !NEW_PSYCH063
 import flixel.system.FlxSound;
+#else
+import flixel.sound.FlxSound;
+#end
 import flixel.util.FlxDestroyUtil;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.graphics.frames.FlxAtlasFrames;
+#end
 
 using StringTools;

@@ -8,12 +8,11 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-using StringTools;
 using flixel.util.FlxArrayUtil;
 
 /**
  * Crash Handler.
- * @author YoshiCrafter29, Ne_Eo, MAJigsaw77 and Lily Ross (mcagabe19)
+ * @author YoshiCrafter29, Ne_Eo, MAJigsaw77
  */
 class CrashHandler
 {

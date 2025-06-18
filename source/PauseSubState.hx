@@ -7,7 +7,6 @@ import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -140,16 +139,16 @@ class PauseSubState extends MusicBeatSubstate
 		regenMenu();
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 		
-		#if mobile
+		#if TOUCH_CONTROLS
 		#if debug_build
-		addVirtualPad(FULL, A);
+		addMobilePad("FULL", "A");
 		#else
 		if (PlayState.chartingMode)
-		    addVirtualPad(FULL, A);
+		    addMobilePad("FULL", "A");
 		else
-		    addVirtualPad(UP_DOWN, A);
+		    addMobilePad("UP_DOWN", "A");
 		#end
-		addVirtualPadCamera();
+		addMobilePadCamera();
 		#end
 	}
 

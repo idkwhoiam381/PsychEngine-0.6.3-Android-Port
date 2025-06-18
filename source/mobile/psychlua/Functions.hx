@@ -1,47 +1,109 @@
 package mobile.psychlua;
 
-import FunkinLua;
 import lime.ui.Haptic;
-import tjson.TJSON as Json;
 import mobile.backend.TouchFunctions;
 #if android
 import android.widget.Toast as AndroidToast;
-import android.Tools as AndroidTools;
 #end
 
 class MobileFunctions
 {
 	public static function implement(funk:FunkinLua)
 	{
-	    var lua:State = funk.lua;
-	    
-	    Lua_helper.add_callback(lua, "showPopUp", function(message:String, title:String):Void
+		#if LUA_ALLOWED
+		var lua:State = funk.lua;
+
+		#if TOUCH_CONTROLS
+		//Use them for 8k charts or something
+		Lua_helper.add_callback(lua, 'HitboxPressed', function(button:String):Bool
 		{
-			CoolUtil.showPopUp(message, title);
+			return PlayState.checkHBoxPress(button, 'pressed');
 		});
-		
-		Lua_helper.add_callback(lua, "parseJson", function(directory:String, ?ignoreMods:Bool = false):Dynamic //For Vs Steve Bedrock Edition Psych Port
+
+		Lua_helper.add_callback(lua, 'HitboxJustPressed', function(button:String):Bool
 		{
-            final funnyPath:String = directory + '.json';
-            final jsonContents:String = Paths.getTextFromFile(funnyPath, ignoreMods);
-            final realPath:String = (ignoreMods ? '' : Paths.modFolders(Paths.currentModDirectory)) + '/' + funnyPath;
-            final jsonExists:Bool = Paths.fileExists(realPath, null, ignoreMods);
-            if (jsonContents != null || jsonExists) return Json.parse(jsonContents);
-            else if (!jsonExists && PlayState.chartingMode) debugPrintFunction('parseJson: "' + realPath + '" doesn\'t exist!', 0xff0000);
-            return null;
+			return PlayState.checkHBoxPress(button, 'justPressed');
 		});
-		
-		Lua_helper.add_callback(lua, "CloseGame", function():Void
+
+		Lua_helper.add_callback(lua, 'HitboxReleased', function(button:String):Bool
 		{
-			lime.system.System.exit(1);
+			return PlayState.checkHBoxPress(button, 'released');
 		});
-	    
-	    #if mobile
-	    Lua_helper.add_callback(lua, "MobileC", function(enabled:Bool = false):Void
+
+		Lua_helper.add_callback(lua, 'HitboxJustReleased', function(button:String):Bool
+		{
+			return PlayState.checkHBoxPress(button, 'justReleased');
+		});
+		#end
+
+		#if LUAVPAD_ALLOWED
+		//OMG
+		Lua_helper.add_callback(lua, 'mobilePadPressed', function(buttonPostfix:String):Bool
+		{
+			return PlayState.checkVPadPress(buttonPostfix, 'pressed');
+		});
+
+		Lua_helper.add_callback(lua, 'mobilePadJustPressed', function(buttonPostfix:String):Bool
+		{
+			return PlayState.checkVPadPress(buttonPostfix, 'justPressed');
+		});
+
+		Lua_helper.add_callback(lua, 'mobilePadReleased', function(buttonPostfix:String):Bool
+		{
+			return PlayState.checkVPadPress(buttonPostfix, 'released');
+		});
+
+		Lua_helper.add_callback(lua, 'mobilePadJustReleased', function(buttonPostfix:String):Bool
+		{
+			return PlayState.checkVPadPress(buttonPostfix, 'justReleased');
+		});
+
+		Lua_helper.add_callback(lua, 'addMobilePad', function(DPad:String, Action:String, ?addToCustomSubstate:Bool = false, ?posAtCustomSubstate:Int = -1):Void
+		{
+			PlayState.instance.makeLuaMobilePad(DPad, Action);
+			if (addToCustomSubstate)
+			{
+				if (PlayState.instance.luaMobilePad != null || !PlayState.instance.members.contains(PlayState.instance.luaMobilePad))
+					CustomSubstate.insertLuaVpad(posAtCustomSubstate);
+			}
+			else
+				PlayState.instance.addLuaMobilePad();
+		});
+
+		Lua_helper.add_callback(lua, 'addMobilePadCamera', function():Void
+		{
+			PlayState.instance.addLuaMobilePadCamera();
+		});
+
+		Lua_helper.add_callback(lua, 'removeMobilePad', function():Void
+		{
+			PlayState.instance.removeLuaMobilePad();
+		});
+		#end
+
+		#if TOUCH_CONTROLS
+		Lua_helper.add_callback(lua, "MobileC", function(enabled:Bool = false):Void
 		{
 			MusicBeatState.mobilec.visible = enabled;
 		});
 
+		Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:String):Void
+		{
+			PlayState.instance.changeControls(mode);
+		});
+
+		Lua_helper.add_callback(lua, "addMobileControls", function(?mode:String):Void
+		{
+			PlayState.instance.addControls(mode);
+		});
+
+		Lua_helper.add_callback(lua, "removeMobileControls", function():Void
+		{
+			PlayState.instance.removeControls();
+		});
+		#end
+
+		#if mobile
 		Lua_helper.add_callback(lua, "vibrate", function(duration:Null<Int>, ?period:Null<Int>)
 		{
 			if (period == null)
@@ -50,7 +112,7 @@ class MobileFunctions
 				return FunkinLua.luaTrace('vibrate: No duration specified.');
 			return Haptic.vibrate(period, duration);
 		});
-		
+
 		Lua_helper.add_callback(lua, "touchJustPressed", TouchFunctions.touchJustPressed);
 		Lua_helper.add_callback(lua, "touchPressed", TouchFunctions.touchPressed);
 		Lua_helper.add_callback(lua, "touchJustReleased", TouchFunctions.touchJustReleased);
@@ -98,16 +160,8 @@ class MobileFunctions
 			return TouchFunctions.touchOverlapObject(obj);
 		});
 		#end
-	}
-	
-	public static function debugPrintFunction(text1:Dynamic = '', text2:Dynamic = '', text3:Dynamic = '', text4:Dynamic = '', text5:Dynamic = '')
-	{
-	    if (text1 == null) text1 = '';
-		if (text2 == null) text2 = '';
-		if (text3 == null) text3 = '';
-		if (text4 == null) text4 = '';
-		if (text5 == null) text5 = '';
-		FunkinLua.luaTrace('' + text1 + text2 + text3 + text4 + text5, true, false);
+
+		#end
 	}
 }
 
@@ -116,8 +170,9 @@ class AndroidFunctions
 {
 	public static function implement(funk:FunkinLua)
 	{
+		#if LUA_ALLOWED
 		var lua:State = funk.lua;
-		
+
 		Lua_helper.add_callback(lua, "isDolbyAtmos", AndroidTools.isDolbyAtmos());
 		Lua_helper.add_callback(lua, "isAndroidTV", AndroidTools.isAndroidTV());
 		Lua_helper.add_callback(lua, "isTablet", AndroidTools.isTablet());
@@ -181,6 +236,7 @@ class AndroidFunctions
 			if (text != null) return FunkinLua.luaTrace('setActivityTitle: No text specified.');
 			PsychJNI.setActivityTitle(text);
 		});
+		#end
 	}
 }
 #end
