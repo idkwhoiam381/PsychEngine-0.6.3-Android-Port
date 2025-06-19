@@ -13,7 +13,7 @@ jobs:
             buildArgs: "ios -simulator -nosign"
             setupCommand: sh ./setup/unix.sh
             artifactName: iOSSimBuild
-            artifactPath: "export/*/ios/*/*/*.ipa"
+            artifactPath: "export/release/ios/build/Release-iphonesimulator/*.ipa"
             system: iOS-Sim
     uses: ./.github/workflows/build.yml
     with:

@@ -67,7 +67,7 @@ jobs:
       - name: Make IPA For iOS Simulator
         if: inputs.system == 'iOS-Sim'
         run: |
-          cd export/*/ios/*/*
+          cd export/release/ios/build/Release-iphonesimulator
           mkdir Payload
           mv *.app Payload
           zip -r ${{ env.PROJECT_NAME }}.ipa Payload

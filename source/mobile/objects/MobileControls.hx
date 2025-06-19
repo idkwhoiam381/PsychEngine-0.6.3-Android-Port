@@ -210,6 +210,13 @@ class CurrentManager {
 			buttonExtra2 = control.newhbox.buttonExtra2;
 			buttonExtra3 = control.newhbox.buttonExtra3;
 			buttonExtra4 = control.newhbox.buttonExtra4;
+		} else if(MobileControls.mode == HITBOX && ClientPrefs.hitboxmode == 'Classic') { //Classic Hitbox Now Support Shift & Space Buttons
+			buttonLeft = control.hbox.buttonLeft;
+			buttonDown = control.hbox.buttonDown;
+			buttonUp = control.hbox.buttonUp;
+			buttonRight = control.hbox.buttonRight;
+			buttonExtra1 = control.hbox.buttonExtra1;
+			buttonExtra2 = control.hbox.buttonExtra2;
 		} else if (ClientPrefs.hitboxmode != 'Classic' && MobileControls.mode != KEYBOARD) {
 			buttonLeft = control.vpad.buttonLeft;
 			buttonDown = control.vpad.buttonDown;

@@ -1434,33 +1434,12 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String)
 		{
 			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.justPressed)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.justPressed)
-					return true;
-				if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.justPressed)
-					return true;
-				if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.justPressed)
-					return true;
-			}
-
-			if (MusicBeatState.mobilec.hbox != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.hbox.buttonExtra1.justPressed)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.hbox.buttonExtra2.justPressed)
-					return true;
-			}
-
-			if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.justPressed)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.justPressed)
-					return true;
-				if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.justPressed)
-					return true;
-				if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.justPressed)
-					return true;
+			if (MusicBeatState.mobilec != null){
+				var extraControl = MusicBeatState.mobilec.current;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.justPressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.justPressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.justPressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.justPressed) return true;
 			}
 			#end
 			return Reflect.getProperty(FlxG.keys.justPressed, name);
@@ -1468,67 +1447,25 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String)
 		{
 			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.pressed)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.pressed)
-					return true;
-				if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.pressed)
-					return true;
-				if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.pressed)
-					return true;
+			if (MusicBeatState.mobilec != null){
+				var extraControl = MusicBeatState.mobilec.current;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.pressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.pressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.pressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.pressed) return true;
 			}
-
-			if (MusicBeatState.mobilec.hbox != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.hbox.buttonExtra1.pressed)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.hbox.buttonExtra2.pressed)
-					return true;
-			}
-
-			if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
-				if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.pressed)
-					return true;
-				if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.pressed)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.pressed)
-					return true;						  
-				if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.pressed)
-					return true;
-		   }
-		   #end
+			#end
 			return Reflect.getProperty(FlxG.keys.pressed, name);
 		});
 		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String)
 		{
 			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec.newhbox != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.newhbox.buttonExtra1.justReleased)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.newhbox.buttonExtra2.justReleased)
-					return true;
-				if (name == extra3 && MusicBeatState.mobilec.newhbox.buttonExtra3.justReleased)
-					return true;
-				if (name == extra4 && MusicBeatState.mobilec.newhbox.buttonExtra4.justReleased)
-					return true;
-			}
-
-			if (MusicBeatState.mobilec.hbox != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.hbox.buttonExtra1.justReleased)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.hbox.buttonExtra2.justReleased)
-					return true;
-			}
-
-			if (MusicBeatState.mobilec.vpad != null && ClientPrefs.extraKeys != 0){
-				if (name == extra1 && MusicBeatState.mobilec.vpad.buttonExtra1.justReleased)
-					return true;
-				if (name == extra2 && MusicBeatState.mobilec.vpad.buttonExtra2.justReleased)
-					return true;
-				if (name == extra3 && MusicBeatState.mobilec.vpad.buttonExtra3.justReleased)
-					return true;
-				if (name == extra4 && MusicBeatState.mobilec.vpad.buttonExtra4.justReleased)
-					return true;
+			if (MusicBeatState.mobilec != null){
+				var extraControl = MusicBeatState.mobilec.current;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.released) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.released) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.released) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.released) return true;
 			}
 			#end
 			return Reflect.getProperty(FlxG.keys.justReleased, name);
@@ -1613,14 +1550,13 @@ class FunkinLua {
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_P');
 			}
 			#if TOUCH_CONTROLS
-			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA1_P');
-			if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA2_P');
-			if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA3_P');
-			if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA4_P');
+			if (MusicBeatState.mobilec != null){
+				var extraControl = MusicBeatState.mobilec.current;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.justPressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.justPressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.justPressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.justPressed) return true;
+			}
 			#end
 			return key;
 		});
@@ -1640,14 +1576,13 @@ class FunkinLua {
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT');
 			}
 			#if TOUCH_CONTROLS
-			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA1');
-			if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA2');
-			if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA3');
-			if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA4');
+			if (MusicBeatState.mobilec != null){
+				var extraControl = MusicBeatState.mobilec.current;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.pressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.pressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.pressed) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.pressed) return true;
+			}
 			#end
 			return key;
 		});
@@ -1667,14 +1602,13 @@ class FunkinLua {
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_R');
 			}
 			#if TOUCH_CONTROLS
-			if (name == extra1 || extra1 == 'SPACE' && name == 'space' || extra1 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA1_R');
-			if (name == extra2 || extra2 == 'SPACE' && name == 'space' || extra2 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA2_R');
-			if (name == extra3 || extra3 == 'SPACE' && name == 'space' || extra3 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA3_R');
-			if (name == extra4 || extra4 == 'SPACE' && name == 'space' || extra4 == 'SHIFT' && name == 'shift')
-				key = PlayState.instance.getControl('EXTRA4_R');
+			if (MusicBeatState.mobilec != null){
+				var extraControl = MusicBeatState.mobilec.current;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.released) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.released) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.released) return true;
+				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.released) return true;
+			}
 			#end
 			return key;
 		});
@@ -2385,7 +2319,7 @@ class FunkinLua {
 				}));
 				return;
 			}
-			FlxG.sound.play(Paths.sound(sound), volume);
+			try { FlxG.sound.play(Paths.sound(sound), volume); } catch (e:Dynamic) {}
 		});
 		Lua_helper.add_callback(lua, "stopSound", function(tag:String) {
 			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
