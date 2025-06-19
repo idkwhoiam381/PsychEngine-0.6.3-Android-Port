@@ -447,9 +447,7 @@ class Paths
 		}
 		#end
 		localTrackedAssets.push(gottenPath);
-		try {
-			return currentTrackedSounds.get(gottenPath);
-		} catch(e:Dynamic){}
+		return currentTrackedSounds.get(gottenPath);
 		#end
 	}
 
