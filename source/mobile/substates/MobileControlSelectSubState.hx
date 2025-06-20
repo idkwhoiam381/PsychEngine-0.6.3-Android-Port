@@ -207,6 +207,10 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 			save();
 			removeMobilePad();
 			leftArrow.visible = rightArrow.visible = grpControls.visible = exit.visible = reset.visible = keyboard.visible = upPozition.visible = downPozition.visible = leftPozition.visible = rightPozition.visible = extra1Pozition.visible = extra2Pozition.visible = extra3Pozition.visible = extra4Pozition.visible = tipText.visible = false;
+			if (daChoice == "Hitbox") {
+				if(ClientPrefs.hitboxmode == 'Classic') hbox.visible = false;
+				else newhbox.visible = false;
+			}
 			titleText.text = 'Controls';
 			inControlsSubstate = true;
 			openSubState(new ControlsSubState());
@@ -241,6 +245,10 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 	
 	override function closeSubState() {
 		changeSelection(0);
+		if (daChoice == "Hitbox") {
+			if(ClientPrefs.hitboxmode == 'Classic') hbox.visible = true;
+			else newhbox.visible = true;
+		}
 		super.closeSubState();
 	}
 
