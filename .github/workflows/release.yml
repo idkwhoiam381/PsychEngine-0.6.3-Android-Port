@@ -1,5 +1,5 @@
-name: Build Psych Extended + Release
-run-name: Psych Extended V1.0.2 PreRelease
+name: Build PsychEngine + Release
+run-name: PsychEngine 0.6.3 Update
 on: workflow_dispatch
 
 permissions:
@@ -7,8 +7,8 @@ permissions:
   discussions: write
 
 env:
-  PROJECT_NAME: PsychExtended
-  REPO_PATH: 28AloneDark53/Psych-Extended
+  PROJECT_NAME: PsychEngine
+  REPO_PATH: Prohack101010/PsychEngine-0.6.3-Android-Port
 
 jobs:
   get-commit-hash:

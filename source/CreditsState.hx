@@ -85,7 +85,6 @@ class CreditsState extends MusicBeatState
 			['KralOyuncu 2010X',	 'KralOyuncuV3',	'Android Porter',					                        'https://youtube.com/@kraloyuncurbx',	    '378FC7'],
 			[''],
 			['Extra Credits'],
-			['MobilePorting',			 'MobilePorting',               'Im using their Codes',                           'https://github.com/MobilePorting',		'FFE7C0'],
 			['beihu',		         'beihu',		    'Owner of NovaFlare Engine\n(I used some codes from NovaFlare)',	'https://youtube.com/@hoyou235',	        'FFC0CB'],
 			[''],
 			['Psych Engine Team'],
