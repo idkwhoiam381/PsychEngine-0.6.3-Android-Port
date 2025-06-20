@@ -80,6 +80,7 @@ class FPSCounter extends TextField
 	{
     	text = 
     	'FPS: $currentFPS' + 
+    	'PsychEngine 0.6.3' + //This might make it easier to find those who use my port
     	'\nMemory: ${flixel.util.FlxStringUtil.formatBytes(memoryMegas)}' +
     	os;
 
