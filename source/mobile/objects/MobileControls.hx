@@ -103,13 +103,14 @@ class MobileControls extends FlxSpriteGroup {
 	var config:Config;
 	var extendConfig:Config;
 
-	public function new(?CustomMode:String) {
+	public function new(?CustomMode:String, ?customControllerValue:Int) {
 		super();
 
 		config = new Config('saved-controls');
 		extendConfig = new Config('saved-extendControls');
 
 		mode = getModeFromNumber(config.getcontrolmode());
+		if (customControllerValue != null) mode = getModeFromNumber(customControllerValue);
 
 		switch (mode){
 			case MOBILEPAD_RIGHT:

@@ -25,15 +25,15 @@ class Hitbox extends FlxSpriteGroup
 	/**
 	 * Create the zone.
 	 */
-	public function new(?MobileCType:String):Void
+	public function new(?CustomMode:String):Void
 	{
 		super();
 		if (ClientPrefs.hitboxhint){
 			hitbox_hint = new FlxSprite(0, (ClientPrefs.hitboxLocation == 'Bottom' && ClientPrefs.extraKeys != 0) ? -150 : 0).loadGraphic(Paths.image('mobile/Hitbox/hitbox_hint'));
 			add(hitbox_hint);
 		}
-		if ((ClientPrefs.hitboxmode != 'New' && ClientPrefs.hitboxmode != 'Classic' && MobileCType == null) || MobileCType != null){
-			var Custom:String = MobileCType != null ? MobileCType : ClientPrefs.hitboxmode;
+		if ((ClientPrefs.hitboxmode != 'New' && ClientPrefs.hitboxmode != 'Classic' && CustomMode == null) || CustomMode != null){
+			var Custom:String = CustomMode != null ? CustomMode : ClientPrefs.hitboxmode;
 			if (!MobileData.hitboxModes.exists(Custom))
 				throw 'The Custom Hitbox File doesn\'t exists.';
 
@@ -44,6 +44,7 @@ class Hitbox extends FlxSpriteGroup
 				var buttonY = buttonData.y;
 				var buttonWidth = buttonData.width;
 				var buttonHeight = buttonData.height;
+				var customReturn = buttonData.returnKey;
 				switch (location) {
 					case 'Top':
 						if (buttonData.topX != null) buttonX = buttonData.topX;
@@ -63,7 +64,7 @@ class Hitbox extends FlxSpriteGroup
 				}
 
 				Reflect.setField(this, buttonData.button,
-					createHint(buttonX, buttonY, buttonWidth, buttonHeight, CoolUtil.colorFromString(buttonData.color)));
+					createHint(buttonX, buttonY, buttonWidth, buttonHeight, CoolUtil.colorFromString(buttonData.color), customReturn));
 				add(Reflect.field(this, buttonData.button));
 			}
 		}
@@ -203,7 +204,7 @@ class Hitbox extends FlxSpriteGroup
 		return bitmap;
 	}
 
-	private function createHint(X:Float, Y:Float, Width:Int, Height:Int, Color:Int = 0xFFFFFF):MobileButton
+	private function createHint(X:Float, Y:Float, Width:Int, Height:Int, Color:Int = 0xFFFFFF, ?customReturn:String):MobileButton
 	{
 		var hint:MobileButton = new MobileButton(X, Y);
 		hint.loadGraphic(createHintGraphic(Width, Height, Color));
@@ -224,6 +225,7 @@ class Hitbox extends FlxSpriteGroup
 		#if FLX_DEBUG
 		hint.ignoreDrawDebug = true;
 		#end
+		if (customReturn != null) hint.returnedButton = customReturn;
 		return hint;
 	}
 }

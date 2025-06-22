@@ -1465,7 +1465,8 @@ class PlayState extends MusicBeatState
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
+		var foldersToCheck:Array<String> = [Paths.getPreloadPath('shaders/')];
+
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
 
@@ -1496,7 +1497,7 @@ class PlayState extends MusicBeatState
 				if(found)
 				{
 					runtimeShaders.set(name, [frag, vert]);
-					//trace('Found shader $name!');
+					//trace('Finally Found shader $name!');
 					return true;
 				}
 			}
@@ -5364,15 +5365,18 @@ class PlayState extends MusicBeatState
 		return false;
 	}
 
-	public function changeControls(?mode:String)
+	//Lua Stuff
+	public function reloadControls(?mode:String, ?customControllerValue:Int)
 	{
 		removeMobileControls();
-		addMobileControls(mode);
+		addMobileControls(mode, customControllerValue);
+		if (customControllerValue <= 3 && customControllerValue >= 0) MusicBeatState.mobilec.alpha = ClientPrefs.mobilePadAlpha;
 	}
 
-	public function addControls(?mode:String)
+	public function addControls(?mode:String, ?customControllerValue:Int)
 	{
-		addMobileControls(mode);
+		addMobileControls(mode, customControllerValue);
+		if (customControllerValue <= 3 && customControllerValue >= 0) MusicBeatState.mobilec.alpha = ClientPrefs.mobilePadAlpha;
 	}
 
 	public function removeControls()

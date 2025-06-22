@@ -87,14 +87,31 @@ class MobileFunctions
 			MusicBeatState.mobilec.visible = enabled;
 		});
 
+		//backwards support
 		Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:String):Void
 		{
-			PlayState.instance.changeControls(mode);
+			PlayState.instance.reloadControls(mode);
 		});
 
-		Lua_helper.add_callback(lua, "addMobileControls", function(?mode:String):Void
+		Lua_helper.add_callback(lua, "switchMobileControls", function(?mode:Int):Void
 		{
-			PlayState.instance.addControls(mode);
+			PlayState.instance.reloadControls(null, mode);
+		});
+		
+
+		Lua_helper.add_callback(lua, "changeHitboxMode", function(?mode:String):Void
+		{
+			PlayState.instance.reloadControls(mode);
+		});
+
+		Lua_helper.add_callback(lua, "reloadMobileControls", function():Void
+		{
+			PlayState.instance.reloadControls();
+		});
+
+		Lua_helper.add_callback(lua, "addMobileControls", function(?mode:String, ?cValue:Int):Void
+		{
+			PlayState.instance.addControls(mode, cValue);
 		});
 
 		Lua_helper.add_callback(lua, "removeMobileControls", function():Void

@@ -263,17 +263,17 @@ class FunkinLua {
 		});
 
 		// shader shit
-		Lua_helper.add_callback(lua, "initLuaShader", function(name:String, glslVersion:Int = 120) {
+		Lua_helper.add_callback(lua, "initLuaShader", function(name:String) {
 			if(!ClientPrefs.shaders) return false;
 
 			#if (!flash && MODS_ALLOWED && sys)
-			return initLuaShader(name, glslVersion);
+			return initLuaShader(name);
 			#else
 			luaTrace("initLuaShader: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 			return false;
 		});
-
+		
 		Lua_helper.add_callback(lua, "setSpriteShader", function(obj:String, shader:String) {
 			if(!ClientPrefs.shaders) return false;
 
@@ -320,13 +320,11 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
-				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getBool(prop);
 			#else
 			luaTrace("getShaderBool: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -335,13 +333,11 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
-				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getBoolArray(prop);
 			#else
 			luaTrace("getShaderBoolArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -350,13 +346,11 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
-				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getInt(prop);
 			#else
 			luaTrace("getShaderInt: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -365,13 +359,11 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
-				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getIntArray(prop);
 			#else
 			luaTrace("getShaderIntArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -380,13 +372,11 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
-				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getFloat(prop);
 			#else
 			luaTrace("getShaderFloat: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -395,13 +385,11 @@ class FunkinLua {
 			var shader:FlxRuntimeShader = getShader(obj);
 			if (shader == null)
 			{
-				Lua.pushnil(lua);
 				return null;
 			}
 			return shader.getFloatArray(prop);
 			#else
 			luaTrace("getShaderFloatArray: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
-			Lua.pushnil(lua);
 			return null;
 			#end
 		});
@@ -481,7 +469,7 @@ class FunkinLua {
 				shader.setSampler2D(prop, value.bitmap);
 			}
 			#else
-			luaTrace("setShaderSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
+			luaTrace("setSampler2D: Platform unsupported for Runtime Shaders!", false, false, FlxColor.RED);
 			#end
 		});
 
@@ -1059,7 +1047,7 @@ class FunkinLua {
 			Reflect.getProperty(getInstance(), obj).remove(Reflect.getProperty(getInstance(), obj)[index]);
 		});
 
-					Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
+		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
 			@:privateAccess
 			#if TOUCH_CONTROLS
 			var myClass:Dynamic = classCheck(classVar);
@@ -1434,39 +1422,27 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String)
 		{
 			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec != null){
-				var extraControl = MusicBeatState.mobilec.current;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.justPressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.justPressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.justPressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.justPressed) return true;
-			}
+			var check:Dynamic;
+			check = specialKeyCheckForOthers(name, "justPressed");
+			if (check != null) return check;
 			#end
 			return Reflect.getProperty(FlxG.keys.justPressed, name);
 		});
 		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String)
 		{
 			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec != null){
-				var extraControl = MusicBeatState.mobilec.current;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.pressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.pressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.pressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.pressed) return true;
-			}
+			var check:Dynamic;
+			check = specialKeyCheckForOthers(name, "pressed");
+			if (check != null) return check;
 			#end
 			return Reflect.getProperty(FlxG.keys.pressed, name);
 		});
 		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String)
 		{
 			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec != null){
-				var extraControl = MusicBeatState.mobilec.current;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.released) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.released) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.released) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.released) return true;
-			}
+			var check:Dynamic;
+			check = specialKeyCheckForOthers(name, "released");
+			if (check != null) return check;
 			#end
 			return Reflect.getProperty(FlxG.keys.justReleased, name);
 		});
@@ -1531,6 +1507,11 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "keyJustPressed", function(name:String) {
+			#if TOUCH_CONTROLS
+			var check:Dynamic;
+			check = specialKeyCheckForOthers(name, "justPressed");
+			if (check != null) return check;
+			#end
 			var key:Bool = false;
 			switch(name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_P');
@@ -1549,18 +1530,14 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP_P');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_P');
 			}
-			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec != null){
-				var extraControl = MusicBeatState.mobilec.current;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.justPressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.justPressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.justPressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.justPressed) return true;
-			}
-			#end
 			return key;
 		});
 		Lua_helper.add_callback(lua, "keyPressed", function(name:String) {
+			#if TOUCH_CONTROLS
+			var check:Dynamic;
+			check = specialKeyCheckForOthers(name, "pressed");
+			if (check != null) return check;
+			#end
 			var key:Bool = false;
 			switch(name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT');
@@ -1575,18 +1552,14 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT');
 			}
-			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec != null){
-				var extraControl = MusicBeatState.mobilec.current;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.pressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.pressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.pressed) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.pressed) return true;
-			}
-			#end
 			return key;
 		});
 		Lua_helper.add_callback(lua, "keyReleased", function(name:String) {
+			#if TOUCH_CONTROLS
+			var check:Dynamic;
+			check = specialKeyCheckForOthers(name, "released");
+			if (check != null) return check;
+			#end
 			var key:Bool = false;
 			switch(name) {
 				case 'left': key = PlayState.instance.getControl('NOTE_LEFT_R');
@@ -1601,15 +1574,6 @@ class FunkinLua {
 				case 'ui_up': key = PlayState.instance.getControl('UI_UP_R');
 				case 'ui_right': key = PlayState.instance.getControl('UI_RIGHT_R');
 			}
-			#if TOUCH_CONTROLS
-			if (MusicBeatState.mobilec != null){
-				var extraControl = MusicBeatState.mobilec.current;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && extraControl.buttonExtra1.released) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && extraControl.buttonExtra2.released) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && extraControl.buttonExtra3.released) return true;
-				if (name.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && extraControl.buttonExtra4.released) return true;
-			}
-			#end
 			return key;
 		});
 		Lua_helper.add_callback(lua, "addCharacterToList", function(name:String, type:String) {
@@ -2985,7 +2949,7 @@ class FunkinLua {
 	}
 	#end
 
-	function initLuaShader(name:String, ?glslVersion:Int = 120)
+	function initLuaShader(name:String)
 	{
 		if(!ClientPrefs.shaders) return false;
 
@@ -2996,13 +2960,15 @@ class FunkinLua {
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
+		var foldersToCheck:Array<String> = [Paths.getPreloadPath('shaders/')];
+
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
+
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
 
 		for(mod in Paths.getGlobalMods())
 			foldersToCheck.insert(0, Paths.mods(mod + '/shaders/'));
-
+		
 		for (folder in foldersToCheck)
 		{
 			if(FileSystem.exists(folder))
@@ -3416,10 +3382,25 @@ class FunkinLua {
 		var key:String = textfix[2].trim();
 		var extraControl:Dynamic = null;
 
+		//Custom return thing
+		for (num in 1...31) {
+			if (MusicBeatState.mobilec.newhbox != null) {
+				//trace("Current Mode: Hitbox");
+				var hitbox:Dynamic = Reflect.getProperty(MusicBeatState.mobilec.newhbox, 'buttonExtra' + num);
+				if (key == Reflect.field(hitbox, 'returnedButton')) {
+					//trace('button ${num} returned to ' + Reflect.field(hitbox, 'returnedButton'));
+					if (Reflect.getProperty(hitbox, type)) {
+						return true;
+					}
+				}
+			}
+		}
+
 		for (num in 1...5){
 			if (ClientPrefs.extraKeys >= num && key == Reflect.field(ClientPrefs, 'extraKeyReturn' + num)){
-				if (MusicBeatState.mobilec.newhbox != null)
+				if (MusicBeatState.mobilec.newhbox != null) {
 					extraControl = Reflect.getProperty(MusicBeatState.mobilec.newhbox, 'buttonExtra' + num);
+				}
 				else if (MusicBeatState.mobilec.hbox != null)
 					extraControl = Reflect.getProperty(MusicBeatState.mobilec.hbox, 'buttonExtra' + num);
 				else
@@ -3427,6 +3408,52 @@ class FunkinLua {
 				if (Reflect.getProperty(extraControl, type))
 					return true;
 			}
+		}
+		return null;
+	}
+
+	//Used for other extra buttons
+	public static function specialKeyCheckForOthers(key:String, type:String):Dynamic
+	{
+		//Custom return thing
+		for (num in 1...31) {
+			if (MusicBeatState.mobilec.newhbox != null) {
+				//trace("Current Mode: Hitbox");
+				var hitbox:Dynamic = Reflect.getProperty(MusicBeatState.mobilec.newhbox, 'buttonExtra' + num);
+				if (key.toUpperCase() == Reflect.field(hitbox, 'returnedButton')) {
+					//trace('button ${num} returned to ' + Reflect.field(hitbox, 'returnedButton'));
+					if (Reflect.getProperty(hitbox, type)) {
+						return true;
+					}
+				}
+			}
+		}
+
+		if (MusicBeatState.mobilec.newhbox != null){
+			var extraControl = MusicBeatState.mobilec.current;
+			var Extra1:Bool = (MusicBeatState.mobilec.newhbox.buttonExtra1.returnedButton == null);
+			var Extra2:Bool = (MusicBeatState.mobilec.newhbox.buttonExtra2.returnedButton == null);
+			var Extra3:Bool = (MusicBeatState.mobilec.newhbox.buttonExtra3.returnedButton == null);
+			var Extra4:Bool = (MusicBeatState.mobilec.newhbox.buttonExtra4.returnedButton == null);
+
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && Reflect.getProperty(extraControl.buttonExtra1, type) && Extra1)
+				return true;
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && Reflect.getProperty(extraControl.buttonExtra2, type) && Extra2)
+				return true;
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && Reflect.getProperty(extraControl.buttonExtra3, type) && Extra3)
+				return true;
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && Reflect.getProperty(extraControl.buttonExtra4, type) && Extra4)
+				return true;
+		} else {
+			var extraControl = MusicBeatState.mobilec.current;
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn1.toUpperCase() && extraControl.buttonExtra1 != null && Reflect.getProperty(extraControl.buttonExtra1, type))
+				return true;
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn2.toUpperCase() && extraControl.buttonExtra2 != null && Reflect.getProperty(extraControl.buttonExtra2, type))
+				return true;
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn3.toUpperCase() && extraControl.buttonExtra3 != null && Reflect.getProperty(extraControl.buttonExtra3, type))
+				return true;
+			if (key.toUpperCase() == ClientPrefs.extraKeyReturn4.toUpperCase() && extraControl.buttonExtra4 != null && Reflect.getProperty(extraControl.buttonExtra4, type))
+				return true;
 		}
 		return null;
 	}

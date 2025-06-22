@@ -171,6 +171,7 @@ typedef HitboxData =
 	width:Int, // the button's Width on screen.
 	height:Int, // the button's Height on screen.
 	color:String, // the button color, default color is white.
+	returnKey:String, // the button return, default return is nothing (please don't add custom return if you don't need).
 	//Top
 	topX:Null<Float>,
 	topY:Null<Float>,

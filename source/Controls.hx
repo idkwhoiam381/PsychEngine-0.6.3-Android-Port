@@ -42,18 +42,6 @@ enum abstract Action(String) to String from String
 	var BACK = "back";
 	var PAUSE = "pause";
 	var RESET = "reset";
-	var EXTRA1 = 'extra1';
-	var EXTRA1_P = 'extra1-press';
-	var EXTRA1_R = 'extra1-release';
-	var EXTRA2 = 'extra2';
-	var EXTRA2_P = 'extra2-press';
-	var EXTRA2_R = 'extra2-release';
-	var EXTRA3 = 'extra3';
-	var EXTRA3_P = 'extra3-press';
-	var EXTRA3_R = 'extra3-release';
-	var EXTRA4 = 'extra4';
-	var EXTRA4_P = 'extra4-press';
-	var EXTRA4_R = 'extra4-release';
 }
 
 enum Device
@@ -81,10 +69,6 @@ enum Control
 	ACCEPT;
 	BACK;
 	PAUSE;
-	EXTRA1;
-	EXTRA2;
-	EXTRA3;
-	EXTRA4;
 }
 
 enum KeyboardScheme
@@ -129,18 +113,6 @@ class Controls extends FlxActionSet
 	var _back = new FlxActionDigital(Action.BACK);
 	var _pause = new FlxActionDigital(Action.PAUSE);
 	var _reset = new FlxActionDigital(Action.RESET);
-	var _extra1 = new FlxActionDigital(Action.EXTRA1);
-	var _extra1P = new FlxActionDigital(Action.EXTRA1_P);
-	var _extra1R = new FlxActionDigital(Action.EXTRA1_R);
-	var _extra2 = new FlxActionDigital(Action.EXTRA2);
-	var _extra2P = new FlxActionDigital(Action.EXTRA2_P);
-	var _extra2R = new FlxActionDigital(Action.EXTRA2_R);
-	var _extra3 = new FlxActionDigital(Action.EXTRA3);
-	var _extra3P = new FlxActionDigital(Action.EXTRA3_P);
-	var _extra3R = new FlxActionDigital(Action.EXTRA3_R);
-	var _extra4 = new FlxActionDigital(Action.EXTRA4);
-	var _extra4P = new FlxActionDigital(Action.EXTRA4_P);
-	var _extra4R = new FlxActionDigital(Action.EXTRA4_R);
 
 	var byName:Map<String, FlxActionDigital> = [];
 
@@ -286,66 +258,6 @@ class Controls extends FlxActionSet
 
 	inline function get_RESET()
 		return _reset.check();
-		
-	public var EXTRA1(get, never):Bool;
-
-	inline function get_EXTRA1()
-		return _extra1.check();		
-	
-	public var EXTRA1_R(get, never):Bool;
-
-	inline function get_EXTRA1_R()
-		return _extra1R.check();		
-		
-	public var EXTRA1_P(get, never):Bool;
-
-	inline function get_EXTRA1_P()
-		return _extra1P.check();
-	
-	public var EXTRA2(get, never):Bool;
-
-	inline function get_EXTRA2()
-		return _extra2.check();		
-	
-	public var EXTRA2_R(get, never):Bool;
-
-	inline function get_EXTRA2_R()
-		return _extra2R.check();		
-		
-	public var EXTRA2_P(get, never):Bool;
-
-	inline function get_EXTRA2_P()
-		return _extra2P.check();			
-
-	public var EXTRA3(get, never):Bool;
-
-	inline function get_EXTRA3()
-		return _extra3.check();		
-	
-	public var EXTRA3_R(get, never):Bool;
-
-	inline function get_EXTRA3_R()
-		return _extra3R.check();		
-		
-	public var EXTRA3_P(get, never):Bool;
-
-	inline function get_EXTRA3_P()
-		return _extra3P.check();
-
-	public var EXTRA4(get, never):Bool;
-
-	inline function get_EXTRA4()
-		return _extra4.check();		
-	
-	public var EXTRA4_R(get, never):Bool;
-
-	inline function get_EXTRA4_R()
-		return _extra4R.check();		
-		
-	public var EXTRA4_P(get, never):Bool;
-
-	inline function get_EXTRA4_P()
-		return _extra4P.check();
 
 	public function new(name, scheme = None)
 	{
@@ -379,18 +291,6 @@ class Controls extends FlxActionSet
 		add(_back);
 		add(_pause);
 		add(_reset);
-		add(_extra1);
-		add(_extra1P);
-		add(_extra1R);
-		add(_extra2);
-		add(_extra2P);
-		add(_extra2R);
-		add(_extra3);
-		add(_extra3P);
-		add(_extra3R);
-		add(_extra4);
-		add(_extra4P);
-		add(_extra4R);
 
 		for (action in digitalActions)
 			byName[action.name] = action;
@@ -611,10 +511,6 @@ class Controls extends FlxActionSet
 			case BACK: _back;
 			case PAUSE: _pause;
 			case RESET: _reset;
-			case EXTRA1: _extra1;
-			case EXTRA2: _extra2;
-			case EXTRA3: _extra3;
-			case EXTRA4: _extra4;
 		}
 	}
 
@@ -674,22 +570,6 @@ class Controls extends FlxActionSet
 				func(_pause, JUST_PRESSED);
 			case RESET:
 				func(_reset, JUST_PRESSED);
-			case EXTRA1:
-				func(_extra1, PRESSED);
-				func(_extra1P, JUST_PRESSED);
-				func(_extra1R, JUST_RELEASED);
-			case EXTRA2:
-				func(_extra2, PRESSED);
-				func(_extra2P, JUST_PRESSED);
-				func(_extra2R, JUST_RELEASED);
-			case EXTRA3:
-				func(_extra3, PRESSED);
-				func(_extra3P, JUST_PRESSED);
-				func(_extra3R, JUST_RELEASED);
-			case EXTRA4:
-				func(_extra4, PRESSED);
-				func(_extra4P, JUST_PRESSED);
-				func(_extra4R, JUST_RELEASED);
 		}
 	}
 
