@@ -79,8 +79,8 @@ class MusicBeatState extends FlxUIState
 			remove(mobilec);
 	}
 
-	public function addMobileControls(?mode:String, ?customControllerValue:Int) {
-		mobilec = new MobileControls(mode, customControllerValue);
+	public function addMobileControls(?customControllerValue:Int, ?mode:String, ?action:String) {
+		mobilec = new MobileControls(customControllerValue, mode, action);
 
 		switch (MobileControls.mode)
 		{

@@ -340,7 +340,6 @@ class PlayState extends MusicBeatState
 		//Reload Mobile Controls Data
 		#if TOUCH_CONTROLS
 		MobileData.init();
-		#if LUA_ALLOWED variables.set("ourmobilec", MusicBeatState.mobilec); #end
 		#end
 
 		debugKeysChart = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_1'));
@@ -1229,6 +1228,8 @@ class PlayState extends MusicBeatState
 		addMobileControls();
 		MusicBeatState.mobilec.visible = false;
 		if (ClientPrefs.hitboxmode != 'Classic' && !ClientPrefs.hitboxhint) MusicBeatState.mobilec.alpha = 0.000001;
+		setOnLuas('mobileCMode', MobileControls.mode);
+		setOnLuas('ourMobileC', MusicBeatState.mobilec);
 		#end
 
 		// if (SONG.song == 'South')
@@ -1468,7 +1469,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public function initLuaShader(name:String)
+	public function initLuaShader(name:String, ?glslVersion:Int = 120)
 	{
 		if(!ClientPrefs.shaders) return false;
 
@@ -1478,8 +1479,7 @@ class PlayState extends MusicBeatState
 			return true;
 		}
 
-		var foldersToCheck:Array<String> = [Paths.getPreloadPath('shaders/')];
-
+		var foldersToCheck:Array<String> = [Paths.mods('shaders/')];
 		if(Paths.currentModDirectory != null && Paths.currentModDirectory.length > 0)
 			foldersToCheck.insert(0, Paths.mods(Paths.currentModDirectory + '/shaders/'));
 
@@ -1510,7 +1510,7 @@ class PlayState extends MusicBeatState
 				if(found)
 				{
 					runtimeShaders.set(name, [frag, vert]);
-					//trace('Finally Found shader $name!');
+					//trace('Found shader $name!');
 					return true;
 				}
 			}
@@ -5417,6 +5417,7 @@ class PlayState extends MusicBeatState
 	#end
 
 	#if TOUCH_CONTROLS
+	//I don't need this anymore because Hitboxes can returnable to any keys
 	public static function checkHBoxPress(button:String, type = 'justPressed') {
 		if (MusicBeatState.mobilec.newhbox != null) button = Reflect.getProperty(MusicBeatState.mobilec.newhbox, button);
 		else button = Reflect.getProperty(MusicBeatState.mobilec.hbox, button);
@@ -5424,17 +5425,17 @@ class PlayState extends MusicBeatState
 		return false;
 	}
 
-	//Lua Stuff
-	public function reloadControls(?mode:String, ?customControllerValue:Int)
+	//Lua Stuff for Mobile Controls
+	public function reloadControls(?customControllerValue:Int, ?mode:String, ?action:String)
 	{
 		removeMobileControls();
-		addMobileControls(mode, customControllerValue);
+		addMobileControls(customControllerValue, mode, action);
 		if (customControllerValue <= 3 && customControllerValue >= 0) MusicBeatState.mobilec.alpha = ClientPrefs.mobilePadAlpha;
 	}
 
-	public function addControls(?mode:String, ?customControllerValue:Int)
+	public function addControls(?customControllerValue:Int, ?mode:String, ?action:String, ?isMobilePad:Bool = false)
 	{
-		addMobileControls(mode, customControllerValue);
+		addMobileControls(customControllerValue, mode, action);
 		if (customControllerValue <= 3 && customControllerValue >= 0) MusicBeatState.mobilec.alpha = ClientPrefs.mobilePadAlpha;
 	}
 

@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: Android-Both
+          - name: Android
             os: ubuntu-24.04
             buildArgs: "android -D officialBuild -final" 
             setupCommand: sh ./setup/unix.sh
