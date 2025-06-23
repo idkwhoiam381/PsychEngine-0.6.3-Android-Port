@@ -2,6 +2,7 @@ package mobile.psychlua;
 
 import lime.ui.Haptic;
 import mobile.backend.TouchFunctions;
+import FunkinLua.CustomSubstate;
 #if android
 import android.widget.Toast as AndroidToast;
 #end
@@ -40,22 +41,22 @@ class MobileFunctions
 		//OMG
 		Lua_helper.add_callback(lua, 'mobilePadPressed', function(buttonPostfix:String):Bool
 		{
-			return PlayState.checkVPadPress(buttonPostfix, 'pressed');
+			return PlayState.checkMPadPress(buttonPostfix, 'pressed');
 		});
 
 		Lua_helper.add_callback(lua, 'mobilePadJustPressed', function(buttonPostfix:String):Bool
 		{
-			return PlayState.checkVPadPress(buttonPostfix, 'justPressed');
+			return PlayState.checkMPadPress(buttonPostfix, 'justPressed');
 		});
 
 		Lua_helper.add_callback(lua, 'mobilePadReleased', function(buttonPostfix:String):Bool
 		{
-			return PlayState.checkVPadPress(buttonPostfix, 'released');
+			return PlayState.checkMPadPress(buttonPostfix, 'released');
 		});
 
 		Lua_helper.add_callback(lua, 'mobilePadJustReleased', function(buttonPostfix:String):Bool
 		{
-			return PlayState.checkVPadPress(buttonPostfix, 'justReleased');
+			return PlayState.checkMPadPress(buttonPostfix, 'justReleased');
 		});
 
 		Lua_helper.add_callback(lua, 'addMobilePad', function(DPad:String, Action:String, ?addToCustomSubstate:Bool = false, ?posAtCustomSubstate:Int = -1):Void
@@ -64,7 +65,7 @@ class MobileFunctions
 			if (addToCustomSubstate)
 			{
 				if (PlayState.instance.luaMobilePad != null || !PlayState.instance.members.contains(PlayState.instance.luaMobilePad))
-					CustomSubstate.insertLuaVpad(posAtCustomSubstate);
+					CustomSubstate.insertLuaMpad(posAtCustomSubstate);
 			}
 			else
 				PlayState.instance.addLuaMobilePad();
@@ -90,6 +91,7 @@ class MobileFunctions
 		//backwards support
 		Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:String):Void
 		{
+			FunkinLua.luaTrace("changeMobileControls is deprecated! Use changeHitboxMode instead", false, true, FlxColor.YELLOW);
 			PlayState.instance.reloadControls(mode);
 		});
 
@@ -97,7 +99,6 @@ class MobileFunctions
 		{
 			PlayState.instance.reloadControls(null, mode);
 		});
-		
 
 		Lua_helper.add_callback(lua, "changeHitboxMode", function(?mode:String):Void
 		{

@@ -79,6 +79,9 @@ using StringTools;
 
 class PlayState extends MusicBeatState
 {
+	#if LUAVPAD_ALLOWED
+	public var luaMobilePad:MobilePad; //trust me, you'll never need to access this directly
+	#end
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 
@@ -216,6 +219,7 @@ class PlayState extends MusicBeatState
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
+	public var luaVpadCam:FlxCamera;
 	public var cameraSpeed:Float = 1;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
@@ -333,6 +337,12 @@ class PlayState extends MusicBeatState
 		// for lua
 		instance = this;
 
+		//Reload Mobile Controls Data
+		#if TOUCH_CONTROLS
+		MobileData.init();
+		#if LUA_ALLOWED variables.set("ourmobilec", MusicBeatState.mobilec); #end
+		#end
+
 		debugKeysChart = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_1'));
 		debugKeysCharacter = ClientPrefs.copyKey(ClientPrefs.keyBinds.get('debug_2'));
 		PauseSubState.songName = null; //Reset to default
@@ -393,12 +403,15 @@ class PlayState extends MusicBeatState
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camOther = new FlxCamera();
+		luaVpadCam = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 		camOther.bgColor.alpha = 0;
+		luaVpadCam.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOther, false);
+		FlxG.cameras.add(luaVpadCam, false);
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
@@ -5028,6 +5041,10 @@ class PlayState extends MusicBeatState
 		}
 		FlxAnimationController.globalSpeed = 1;
 		FlxG.sound.music.pitch = 1;
+		#if LUAVPAD_ALLOWED
+		if (luaMobilePad != null)
+			luaMobilePad = FlxDestroyUtil.destroy(luaMobilePad);
+		#end
 		super.destroy();
 	}
 
@@ -5357,11 +5374,53 @@ class PlayState extends MusicBeatState
 	var curLight:Int = -1;
 	var curLightEvent:Int = -1;
 
+	#if LUAVPAD_ALLOWED
+	public function makeLuaMobilePad(DPad:String, Action:String)
+	{
+		if(members.contains(luaMobilePad)) return;
+
+		if(!variables.exists("luaMobilePad"))
+			variables.set("luaMobilePad", luaMobilePad);
+
+		luaMobilePad = new MobilePad(DPad, Action);
+		luaMobilePad.alpha = ClientPrefs.mobilePadAlpha;
+	}
+
+	public function addLuaMobilePad() {
+		if(luaMobilePad == null || members.contains(luaMobilePad)) return;
+
+		var target:Dynamic = isDead ? GameOverSubstate.instance : PlayState.instance;
+		target.insert(target.members.length + 1, luaMobilePad);
+	}
+
+	public function addLuaMobilePadCamera()
+	{
+		if(luaMobilePad != null)
+			luaMobilePad.cameras = [luaVpadCam];
+	}
+
+	public function removeLuaMobilePad()
+	{
+		if (luaMobilePad != null) {
+			luaMobilePad.destroy();
+			remove(luaMobilePad);
+			luaMobilePad = null;
+		}
+	}
+
+	public static function checkMPadPress(buttonPostfix:String, type = 'justPressed') {
+		var buttonName = "button" + buttonPostfix;
+		var button = Reflect.getProperty(PlayState.instance.luaMobilePad, buttonName); //Access Spesific LuaMobilePad Button
+		if (button != null) return Reflect.getProperty(button, type);
+		return false;
+	}
+	#end
+
 	#if TOUCH_CONTROLS
 	public static function checkHBoxPress(button:String, type = 'justPressed') {
 		if (MusicBeatState.mobilec.newhbox != null) button = Reflect.getProperty(MusicBeatState.mobilec.newhbox, button);
 		else button = Reflect.getProperty(MusicBeatState.mobilec.hbox, button);
-		return Reflect.getProperty(button, type);
+		if (button != null) return Reflect.getProperty(button, type);
 		return false;
 	}
 
@@ -5380,8 +5439,6 @@ class PlayState extends MusicBeatState
 	}
 
 	public function removeControls()
-	{
 		removeMobileControls();
-	}
 	#end
 }
