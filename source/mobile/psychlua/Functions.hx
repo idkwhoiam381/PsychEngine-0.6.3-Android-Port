@@ -96,52 +96,25 @@ class MobileFunctions
 		});
 
 		//backwards support
-		//if (getModeAsControlsGroup() == HITBOX) {
-			Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:String):Void
-			{
-				FunkinLua.luaTrace("changeMobileControls is deprecated! Use changeHitboxMode or changeMobilePadButtons instead", false, true, FlxColor.YELLOW);
-				PlayState.instance.reloadControls(null, mode, null);
-			});
+		Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:String):Void
+		{
+			FunkinLua.luaTrace("changeMobileControls is deprecated! Use changeHitboxMode or changeMobilePadButtons instead", false, true, FlxColor.YELLOW);
+			PlayState.instance.reloadControls(null, mode);
+		});
 
-			Lua_helper.add_callback(lua, "changeHitboxMode", function(?mode:String):Void
-			{
-				PlayState.instance.reloadControls(null, mode, null);
-			});
-		/* }
-		else {
-			Lua_helper.add_callback(lua, "changeMobileControls", function(?mode:String)
-			{
-				return null;
-			});
-
-			Lua_helper.add_callback(lua, "changeHitboxMode", function(?mode:String)
-			{
-				return null;
-			});
-		} */
-
-		//changes the mobilePad connected trackedinputsNOTES (lua created mobilePad's can't support trackedinputsNOTES)
-		// if (getModeAsControlsGroup() != HITBOX && getModeAsControlsGroup() != KEYBOARD) {
-			Lua_helper.add_callback(lua, "changeMobilePadButtons", function(?mode:String, ?action:String):Void
-			{
-				PlayState.instance.reloadControls(null, mode, action);
-			});
-		/* }
-		else {
-			Lua_helper.add_callback(lua, "changeMobilePadButtons", function(?mode:String, ?action:String)
-			{
-				return null;
-			});
-		} */
+		Lua_helper.add_callback(lua, "changeHitboxMode", function(?mode:String):Void
+		{
+			PlayState.instance.reloadControls(null, mode);
+		});
 
 		Lua_helper.add_callback(lua, "reloadMobileControls", function():Void
 		{
 			PlayState.instance.reloadControls();
 		});
 
-		Lua_helper.add_callback(lua, "addMobileControls", function(?cValue:Int, ?mode:String, ?action:String):Void
+		Lua_helper.add_callback(lua, "addMobileControls", function(?cValue:Int, ?mode:String):Void
 		{
-			PlayState.instance.addControls(cValue, mode, action);
+			PlayState.instance.addControls(cValue, mode);
 		});
 
 		Lua_helper.add_callback(lua, "removeMobileControls", function():Void

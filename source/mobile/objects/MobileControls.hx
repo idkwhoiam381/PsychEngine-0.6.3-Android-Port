@@ -103,7 +103,7 @@ class MobileControls extends FlxSpriteGroup {
 	var config:Config;
 	var extendConfig:Config;
 
-	public function new(?customControllerValue:Int, ?CustomMode:String, ?CustomAction:String) {
+	public function new(?customControllerValue:Int, ?CustomMode:String) {
 		super();
 
 		config = new Config('saved-controls');
@@ -114,13 +114,13 @@ class MobileControls extends FlxSpriteGroup {
 
 		switch (mode){
 			case MOBILEPAD_RIGHT:
-				initControler(0, CustomMode, CustomAction);
+				initControler(0);
 			case MOBILEPAD_LEFT:
-				initControler(1, CustomMode, CustomAction);
+				initControler(1);
 			case MOBILEPAD_CUSTOM:
-				initControler(2, CustomMode, CustomAction);
+				initControler(2);
 			case DUO:
-				initControler(3, CustomMode, CustomAction);
+				initControler(3);
 			case HITBOX:
 				if(ClientPrefs.hitboxmode == 'Classic') initControler(4);
 				else initControler(5, CustomMode);
@@ -130,27 +130,23 @@ class MobileControls extends FlxSpriteGroup {
 		current = new CurrentManager(this);
 	}
 
-	function initControler(vpadMode:Int, ?CustomMode:String, ?CustomAction:String) {
+	function initControler(vpadMode:Int, ?CustomMode:String) {
 		switch (vpadMode){
 			case 0:
-				if (CustomAction != null) vpad = new MobilePad(CustomMode != null ? CustomMode : "RIGHT_FULL", CustomAction);
-				else vpad = new MobilePad(CustomMode != null ? CustomMode : "RIGHT_FULL", "controlExtend");
+				vpad = new MobilePad("RIGHT_FULL", "controlExtend");
 				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 1:
-				if (CustomAction != null) vpad = new MobilePad(CustomMode != null ? CustomMode : "FULL", CustomAction);
-				else vpad = new MobilePad(CustomMode != null ? CustomMode : "FULL", "controlExtend");
+				vpad = new MobilePad("FULL", "controlExtend");
 				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 2:
-				if (CustomAction != null) vpad = new MobilePad(CustomMode != null ? CustomMode : "FULL", CustomAction);
-				else vpad = new MobilePad(CustomMode != null ? CustomMode : "FULL", "controlExtend");
+				vpad = new MobilePad("FULL", "controlExtend");
 				vpad = config.loadcustom(vpad);
 				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 3:
-				if (CustomAction != null) vpad = new MobilePad(CustomMode != null ? CustomMode : "DUO", CustomAction);
-				else vpad = new MobilePad(CustomMode != null ? CustomMode : "DUO", "controlExtend");
+				vpad = new MobilePad("DUO", "controlExtend");
 				add(vpad);
 				vpad = extendConfig.loadcustom(vpad);
 			case 4:

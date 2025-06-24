@@ -1228,8 +1228,6 @@ class PlayState extends MusicBeatState
 		addMobileControls();
 		MusicBeatState.mobilec.visible = false;
 		if (ClientPrefs.hitboxmode != 'Classic' && !ClientPrefs.hitboxhint) MusicBeatState.mobilec.alpha = 0.000001;
-		setOnLuas('mobileCMode', MobileControls.mode);
-		setOnLuas('ourMobileC', MusicBeatState.mobilec);
 		#end
 
 		// if (SONG.song == 'South')
@@ -5426,16 +5424,16 @@ class PlayState extends MusicBeatState
 	}
 
 	//Lua Stuff for Mobile Controls
-	public function reloadControls(?customControllerValue:Int, ?mode:String, ?action:String)
+	public function reloadControls(?customControllerValue:Int, ?mode:String)
 	{
 		removeMobileControls();
-		addMobileControls(customControllerValue, mode, action);
+		addMobileControls(customControllerValue, mode);
 		if (customControllerValue <= 3 && customControllerValue >= 0) MusicBeatState.mobilec.alpha = ClientPrefs.mobilePadAlpha;
 	}
 
-	public function addControls(?customControllerValue:Int, ?mode:String, ?action:String, ?isMobilePad:Bool = false)
+	public function addControls(?customControllerValue:Int, ?mode:String)
 	{
-		addMobileControls(customControllerValue, mode, action);
+		addMobileControls(customControllerValue, mode);
 		if (customControllerValue <= 3 && customControllerValue >= 0) MusicBeatState.mobilec.alpha = ClientPrefs.mobilePadAlpha;
 	}
 
