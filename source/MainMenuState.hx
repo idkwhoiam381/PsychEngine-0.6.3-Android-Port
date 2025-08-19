@@ -36,9 +36,9 @@ class MainMenuState extends MusicBeatState
 		'story_mode',
 		'freeplay',
 		#if MODS_ALLOWED 'mods', #end
-		#if ACHIEVEMENTS_ALLOWED 'awards', #end
+		//#if ACHIEVEMENTS_ALLOWED 'awards', #end
 		'credits',
-		#if !switch 'donate', #end
+		//#if !switch 'donate', #end
 		'options'
 	];
 
@@ -186,9 +186,9 @@ class MainMenuState extends MusicBeatState
 				curSelected = spr.ID;
 
 				if (spr.ID == curSelected){
-					spr.scale.set(1, 1);
+					spr.alpha = 1;
 				}else{
-					spr.scale.set(0.9, 0.9);
+					spr.alpha = 0.5;
 				}
 					if(FlxG.mouse.pressed) {
 						switch (spr.ID){
@@ -215,7 +215,7 @@ class MainMenuState extends MusicBeatState
 						}
 					}
 			}else{
-				spr.scale.set(0.9, 0.9);
+				spr.alpha = 0.5;
 			}
 		});
 
